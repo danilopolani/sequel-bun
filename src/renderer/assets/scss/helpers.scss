@@ -1,0 +1,64 @@
+// Margin & Padding
+.margin-top-10 {
+  margin-top: 10px;
+}
+.margin-top-15 {
+  margin-top: 15px;
+}
+.margin-top-30 {
+  margin-top: 30px;
+}
+.margin-right-5 {
+  margin-right: 5px;
+}
+.margin-bottom-5 {
+  margin-bottom: 5px !important;
+}
+.margin-bottom-30 {
+  margin-bottom: 30px !important;
+}
+.padding-top-50 {
+  padding-top: 50px;
+}
+.padding-left-right-15 {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.no-padding-top {
+  padding-top: 0 !important;
+}
+
+// Text & Block alignments
+.is-block-centered {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+// Positions
+.relative {
+  position: relative;
+}
+
+// Colors & Backgrounds
+.is-orange {
+  background: hsl(14, 100%, 53%);
+  color: #fff;
+}
+
+// Other
+.is-fullheight {
+  height: 100%;
+}
+.half-horizontal {
+  width: 50%;
+  float: left;
+  padding-left: 15px;
+  padding-right: 15px;
+  height: 100%;
+}
+.half-vertical {
+  height: 50%;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  position: relative;
+}
