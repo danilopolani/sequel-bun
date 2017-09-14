@@ -1,5 +1,6 @@
 # Sequel Bun
 
+## /!\ WORK IN PROGRESS /!\
 <!--<p align="center"><img src="http://i.imgur.com/SLUqV4s.png" alt="Log analyser logo" /></p>-->
 
 Sequel Bun is a MySQL GUI client for Ubuntu, inspired by Sequel Pro.  
