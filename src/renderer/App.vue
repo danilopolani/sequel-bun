@@ -11,7 +11,7 @@
       </div>
     </div>
 
-    <nav class="nav has-shadow">
+    <!--<nav class="nav has-shadow">
       <div class="container">
         <div class="nav-left">
           <router-link to="/overview" class="nav-item is-tab">Overview</router-link>
@@ -29,7 +29,8 @@
           </a>
         </div>
       </div>
-    </nav>
+    </nav>-->
+
     <router-view ref="router"></router-view>
   </div>
 </template>

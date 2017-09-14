@@ -1,34 +1,52 @@
 @import 'variables';
 @import 'helpers';
 
+// General
+html {
+  font-size: 14px;
+}
+
+aside.menu {
+  background: #f0f0f0;
+  border-right: 1px solid #d9d9d9;
+}
+main {
+  background: #ededed;
+}
+
+// Forms
+.is-horizontal label {
+  font-weight: normal;
+}
+
 // Tabs customize
 .nav-item a.is-tab.is-active,
 a.nav-item.is-tab.is-active {
-    color: $brand-accent;
-    border-bottom-color: $brand-accent;
+  color: $brand-accent;
+  border-bottom-color: $brand-accent;
 }
 
 .nav-item a.is-tab:hover,
 a.nav-item.is-tab:hover {
-    border-bottom-color: $brand-accent;
+  border-bottom-color: $brand-accent;
 }
 
 // Good table override
 table .global-search-input {
-    width: 300px !important;
-    float: right;
-    border-radius: 0 !important;
+  width: 300px !important;
+  float: right;
+  border-radius: 0 !important;
 }
 table .global-search-icon > img {
-    display: none;
+  display: none;
 }
 table.table-bordered {
-    border-color: #eee;
+  border-color: #eee;
 }
 table td,
 table th {
-    background: none !important;
+  background: none !important;
 }
 table th.line-numbers {
-    background: rgba(35, 41, 53, .05) !important;
+  background: rgba(35, 41, 53, .05) !important;
 }

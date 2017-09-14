@@ -1,31 +1,21 @@
 // Margin & Padding
 .margin-top-10 {
-  margin-top: 10px;
+  margin-top: 10px !important;
 }
-.margin-top-15 {
-  margin-top: 15px;
+.padding-top {
+  padding-top: 3rem;
 }
-.margin-top-30 {
-  margin-top: 30px;
+.padding-right {
+  padding-right: 1.5rem;
 }
-.margin-right-5 {
-  margin-right: 5px;
+.padding-bottom {
+  padding-bottom: 3rem;
 }
-.margin-bottom-5 {
-  margin-bottom: 5px !important;
+.padding-left {
+  padding-left: 1.5rem;
 }
-.margin-bottom-30 {
-  margin-bottom: 30px !important;
-}
-.padding-top-50 {
-  padding-top: 50px;
-}
-.padding-left-right-15 {
-  padding-left: 15px;
-  padding-right: 15px;
-}
-.no-padding-top {
-  padding-top: 0 !important;
+.no-padding {
+  padding: 0;
 }
 
 // Text & Block alignments
@@ -33,21 +23,21 @@
     margin-left: auto;
     margin-right: auto;
 }
+.vertical-middle {
+  vertical-align: middle;
+}
 
 // Positions
 .relative {
   position: relative;
 }
 
-// Colors & Backgrounds
-.is-orange {
-  background: hsl(14, 100%, 53%);
-  color: #fff;
-}
-
 // Other
 .is-fullheight {
   height: 100%;
+}
+.is-fullwidth {
+  width: 100%;
 }
 .half-horizontal {
   width: 50%;
@@ -61,4 +51,7 @@
   padding-top: 15px;
   padding-bottom: 15px;
   position: relative;
+}
+.pointer {
+  cursor: pointer;
 }

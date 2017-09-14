@@ -1,24 +1,24 @@
-# Log analyser
+# Sequel Bun
 
-<p align="center"><img src="http://i.imgur.com/SLUqV4s.png" alt="Log analyser logo" /></p>
+<!--<p align="center"><img src="http://i.imgur.com/SLUqV4s.png" alt="Log analyser logo" /></p>-->
 
-Analyse web server logs getting statistics about the last 7 days URLs, view all requests and filter them.  
+Sequel Bun is a MySQL GUI client for Ubuntu, inspired by Sequel Pro.  
 Written in **Electron**, **NodeJS** and **VueJS**, for all links and documentation see the end of readme.
 
 ### Build Setup
 
 ``` bash
 # install dependencies
-npm install
+yarn
 
 # serve with hot reload
-npm run dev
+yarn run dev
 
 # build electron application for production
-npm run build
+yarn run build
 
 # lint all JS/Vue component files in `src/`
-npm run lint
+yarn run lint
 
 ```
 
