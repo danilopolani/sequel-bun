@@ -10,139 +10,200 @@
         </ul>
       </aside>
       <main class="column padding-top padding-right">
-        <form class="wrapping">
-          <!-- Connection name -->
-          <div class="field is-horizontal">
-            <div class="columns is-fullwidth">
-              <div class="column is-4">
-                <div class="field-label is-normal">
-                  <label class="label">Connection name</label>
-                </div>
-              </div>
-              <div class="field-body column">
-                <div class="field">
-                  <div class="control">
-                    <input class="input" type="text" placeholder="My connection" required>
+        <form class="wrap">
+          <section class="bordered">
+            <!-- Connection name -->
+            <div class="field is-horizontal">
+              <div class="columns is-fullwidth">
+                <div class="column is-4">
+                  <div class="field-label is-normal">
+                    <label class="label">Connection name</label>
                   </div>
                 </div>
-              </div>
-            </div><!-- /.columns -->
-            <div class="is-clearfix"></div>
-          </div><!-- ./field -->
+                <div class="field-body column">
+                  <div class="field">
+                    <div class="control">
+                      <input class="input" type="text" placeholder="My connection" required>
+                    </div>
+                  </div>
+                </div>
+              </div><!-- /.columns -->
+              <div class="is-clearfix"></div>
+            </div><!-- ./field -->
 
-          <!-- Color -->
-          <div class="field is-horizontal">
-            <div class="columns is-fullwidth">
-              <div class="column is-4">
-                <div class="field-label is-normal">
-                  <label class="label">Color</label>
-                </div>
-              </div>
-              <div class="field-body column">
-                <div class="columns">
-                  <div class="column has-text-centered">
-                    <i class="fa fa-times vertical-middle pointer" @click="color = null"></i>
-                  </div>
-                  <div class="column has-text-centered" v-for="c in ['primary', 'info', 'success', 'warning', 'danger']">
-                    <div class="color button" :class="['is-' + c, {'active': c == color}]" @click="color = c"></div>
+            <!-- Color -->
+            <div class="field is-horizontal">
+              <div class="columns is-fullwidth">
+                <div class="column is-4">
+                  <div class="field-label is-normal">
+                    <label class="label">Color</label>
                   </div>
                 </div>
-              </div>
-            </div><!-- /.columns -->
-            <div class="is-clearfix"></div>
-          </div><!-- ./field -->
+                <div class="field-body column">
+                  <div class="columns">
+                    <div class="column has-text-centered">
+                      <i class="fa fa-times vertical-middle pointer" @click="connection.color = null"></i>
+                    </div>
+                    <div class="column has-text-centered" v-for="c in ['primary', 'info', 'success', 'warning', 'danger']">
+                      <div class="color button" :class="['is-' + c, {'active': c == connection.color}]" @click="connection.color = c"></div>
+                    </div>
+                  </div>
+                </div>
+              </div><!-- /.columns -->
+              <div class="is-clearfix"></div>
+            </div><!-- ./field -->
 
-          <!-- Hostname -->
-          <div class="field is-horizontal">
-            <div class="columns is-fullwidth">
-              <div class="column is-4">
-                <div class="field-label is-normal">
-                  <label class="label">Hostname</label>
-                </div>
-              </div>
-              <div class="field-body column">
-                <div class="field">
-                  <div class="control">
-                    <input class="input" type="text" placeholder="127.0.0.1" required>
+            <!-- Hostname -->
+            <div class="field is-horizontal">
+              <div class="columns is-fullwidth">
+                <div class="column is-4">
+                  <div class="field-label is-normal">
+                    <label class="label">Hostname</label>
                   </div>
                 </div>
-              </div>
-            </div><!-- /.columns -->
-            <div class="is-clearfix"></div>
-          </div><!-- ./field -->
-
-          <!-- Hostname -->
-          <div class="field is-horizontal">
-            <div class="columns is-fullwidth">
-              <div class="column is-4">
-                <div class="field-label is-normal">
-                  <label class="label">Username</label>
-                </div>
-              </div>
-              <div class="field-body column">
-                <div class="field">
-                  <div class="control">
-                    <input class="input" type="text" placeholder="Username" required>
+                <div class="field-body column">
+                  <div class="field">
+                    <div class="control">
+                      <input class="input" type="text" placeholder="127.0.0.1" v-model="connection.host" required>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div><!-- /.columns -->
-            <div class="is-clearfix"></div>
-          </div><!-- ./field -->
+              </div><!-- /.columns -->
+              <div class="is-clearfix"></div>
+            </div><!-- ./field -->
 
-          <!-- Password -->
-          <div class="field is-horizontal">
-            <div class="columns is-fullwidth">
-              <div class="column is-4">
-                <div class="field-label is-normal">
-                  <label class="label">Password</label>
+            <!-- Hostname -->
+            <div class="field is-horizontal">
+              <div class="columns is-fullwidth">
+                <div class="column is-4">
+                  <div class="field-label is-normal">
+                    <label class="label">Username</label>
+                  </div>
                 </div>
-              </div>
-              <div class="field-body column">
-                <div class="field has-addons">
-                  <p class="control is-fullwidth">
-                    <input class="input" :type="show_password ? 'text' : 'password'" placeholder="Password">
-                  </p>
-                  <p class="control">
-                    <button type="button" class="button" @click="show_password = !show_password">
-                      <i class="fa" :class="{'fa-eye': !show_password, 'fa-eye-slash': show_password}"></i>
-                    </button>
-                  </p>
+                <div class="field-body column">
+                  <div class="field">
+                    <div class="control">
+                      <input class="input" type="text" placeholder="Username" v-model="connection.user" required>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div><!-- /.columns -->
-            <div class="is-clearfix"></div>
-          </div><!-- ./field -->
+              </div><!-- /.columns -->
+              <div class="is-clearfix"></div>
+            </div><!-- ./field -->
+
+            <!-- Password -->
+            <div class="field is-horizontal">
+              <div class="columns is-fullwidth">
+                <div class="column is-4">
+                  <div class="field-label is-normal">
+                    <label class="label">Password</label>
+                  </div>
+                </div>
+                <div class="field-body column">
+                  <div class="field has-addons">
+                    <p class="control is-fullwidth">
+                      <input class="input" v-if="!show_password" type="password" v-model="connection.password" placeholder="Password">
+                      <input class="input" v-if="show_password" type="text" v-model="connection.password" placeholder="Password">
+                    </p>
+                    <p class="control">
+                      <button type="button" class="button" @click="show_password = !show_password">
+                        <i class="fa" :class="{'fa-eye': !show_password, 'fa-eye-slash': show_password}"></i>
+                      </button>
+                    </p>
+                  </div>
+                </div>
+              </div><!-- /.columns -->
+              <div class="is-clearfix"></div>
+            </div><!-- ./field -->
+
+            <!-- Default schema -->
+            <div class="field is-horizontal">
+              <div class="columns is-fullwidth">
+                <div class="column is-4">
+                  <div class="field-label is-normal">
+                    <label class="label">Default schema</label>
+                  </div>
+                </div>
+                <div class="field-body column">
+                  <div class="field">
+                    <div class="control">
+                      <input class="input" type="text" placeholder="my_db"  v-model="connection.database">
+                    </div>
+                  </div>
+                </div>
+              </div><!-- /.columns -->
+              <div class="is-clearfix"></div>
+            </div><!-- ./field -->
+          </section>
+
+          <!-- Buttons -->
+          <div class="margin-top-10">
+            <button type="button" class="button is-pulled-left" v-if="!connecting" @click="test(connection)">Test connection</button>
+            <p class="" v-else>Connecting...</p>
+            <button type="button" class="button is-info is-pulled-right">Save connection</button>
+          </div>
         </form>
-        
-        <!-- Buttons -->
-        <div class="wrapping margin-top-10">
-          <button type="button" class="button is-pulled-left">Test connection</button>
-          <button type="button" class="button is-info is-pulled-right">Save connection</button>
-        </div>
       </main>
     </div><!-- /.columns -->
   </div><!-- /.section -->
 </template>
 
 <script>
+  import Connection from '../services/Connection'
+  const settings = require('electron-settings')
+
   export default {
     name: 'connections',
     data () {
       return {
         show_password: false,
-        color: null
+        connecting: false,
+        connection: {
+          name: null,
+          color: null,
+          host: null,
+          user: null,
+          password: null,
+          database: null
+        }
+      }
+    },
+    methods: {
+      /**
+       * Test a connection
+       *
+       * @param {object} conn
+       */
+      test (conn) {
+        let $vm = this
+
+        Connection.connect(conn, false)
+        .then(() => $vm.$swal('Success', 'Connection established correctly.', 'success'))
+        .catch(err => $vm.$swal('Error', err, 'error'))
+      },
+
+      /**
+       * Save a connection
+       *
+       * @param {int} i
+       * @param {object} conn
+       */
+      save (i, conn) {
+        let connections = settings.get('connections')
+        connections.push(conn)
+
+        settings.set('connections', connections)
       }
     }
   }
 </script>
 
 <style lang="scss">
-.wrapping {
+.wrap {
   width: 80%;
   margin: auto;
 }
-form.wrapping {
+.wrap .bordered {
   background: #e4e4e4;
   border: 1px solid #dedede;
   border-radius: 3px;
