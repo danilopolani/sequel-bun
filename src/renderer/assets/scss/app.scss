@@ -6,17 +6,103 @@ html {
   font-size: 14px;
 }
 
+// Structure
 aside.menu {
   background: #f0f0f0;
   border-right: 1px solid #d9d9d9;
+  
+  .menu-list {
+    margin-left: -1.5rem;
+    margin-right: calc(-1.5rem + 10px);
+
+    li a {
+      padding-left: 15px;
+      padding-right: 15px;
+      border-radius: 0;
+
+      &:hover {
+        background-color: lighten($blue, 15%);
+      }
+
+      .button {
+        height: 1.8em;
+        font-size: 0.9rem;
+        line-height: 1;
+        border-radius: 15px;
+        border: none;
+        width: 100%;
+        justify-content: left;
+        overflow: hidden;
+      }
+    }
+  }
 }
+
 main {
   background: #ededed;
+}
+
+// Context menu
+.ctx-menu-container {
+  background: none;
+  box-shadow: none;
+  border: none;
+
+  ul.ctx-menu {
+    background: none;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+
+    .dropdown-menu {
+      padding-top: 0;
+
+      .dropdown-item {
+        font-size: 0.9rem;
+
+        &:hover {
+          background-color: lighten($blue, 10%);
+          color: #fff !important;
+
+          &.has-text-danger {
+            background: $red;
+          }
+        }
+      }
+    }
+  }
 }
 
 // Forms
 .is-horizontal label {
   font-weight: normal;
+}
+
+// Buttons
+.button {
+  border-radius: 3px;
+
+  &.action {
+    height: 2em;
+    line-height: 1;
+  }
+}
+
+// Swal
+.swal2-modal .swal2-title {
+  font-size: 2rem;
+}
+
+.swal2-buttonswrapper {
+  button.swal2-styled {
+    font-weight: normal;
+    font-size: 1rem;
+
+    &:focus {
+      outline: none;
+    }
+  }
 }
 
 // Tabs customize

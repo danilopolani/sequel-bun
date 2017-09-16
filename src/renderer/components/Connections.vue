@@ -1,14 +1,37 @@
 <template>
   <div class="section no-padding is-fullheight">
+
+    <!-- Context menu -->
+    <context-menu ref="ctxMenu" @ctx-open="onCtxOpen">
+      <div class="dropdown is-active">
+        <div class="dropdown-menu" role="menu">
+          <div class="dropdown-content">
+            <a href="#" class="dropdown-item">
+              Edit
+            </a>
+            <a class="dropdown-item">
+              Test connection
+            </a>
+            <hr class="dropdown-divider">
+            <a href="#" class="dropdown-item has-text-danger" @click="deleteConn()">
+              Delete
+            </a>
+          </div>
+        </div>
+      </div>
+    </context-menu>
+
     <div class="columns is-fullheight">
       <aside class="column is-one-quarter menu padding-top padding-left">
         <p class="menu-label"><strong>Connections</strong></p>
-        <ul class="menu-list">
-          <li><a href="#">Production</a></li>
-          <li><a href="#">Local</a></li>
-          <li><a href="#">John's</a></li>
+        <ul class="menu-list" v-if="connections.length > 0">
+          <li v-for="(item, i) in connections" @contextmenu.prevent="$refs.ctxMenu.open($event, {i: i, item: item})">
+            <a><button class="button" :class="'is-' + item.color">{{ item.name }}</button></a>
+          </li>
         </ul>
+        <small class="has-text-grey" v-else>No connection yet.</small>
       </aside>
+
       <main class="column padding-top padding-right">
         <form class="wrap">
           <section class="bordered">
@@ -23,7 +46,7 @@
                 <div class="field-body column">
                   <div class="field">
                     <div class="control">
-                      <input class="input" type="text" placeholder="My connection" required>
+                      <input class="input" type="text" placeholder="My connection" v-model="connection.name" required>
                     </div>
                   </div>
                 </div>
@@ -138,9 +161,16 @@
 
           <!-- Buttons -->
           <div class="margin-top-10">
-            <button type="button" class="button is-pulled-left" v-if="!connecting" @click="test(connection)">Test connection</button>
-            <p class="" v-else>Connecting...</p>
-            <button type="button" class="button is-info is-pulled-right">Save connection</button>
+            <button type="button" class="button is-pulled-left action" v-if="!connecting" @click="test(connection)">
+              Test connection
+            </button>
+            <p class="is-pulled-left has-text-grey" id="connecting-message" v-else>
+              <span class="loader"></span>
+              Connecting...
+            </p>
+            <button type="button" class="button is-info is-pulled-right action osx active" :disabled="connecting" @click="save(connection)">
+              Save connection
+            </button>
           </div>
         </form>
       </main>
@@ -154,20 +184,28 @@
 
   export default {
     name: 'connections',
-    data () {
-      return {
-        show_password: false,
-        connecting: false,
-        connection: {
-          name: null,
-          color: null,
-          host: null,
-          user: null,
-          password: null,
-          database: null
-        }
+    data: () => ({
+      show_password: false,
+      connecting: false,
+      connection: {
+        name: null,
+        color: null,
+        host: null,
+        user: null,
+        password: null,
+        database: null
+      },
+      connections: [],
+      ctxData: {}
+    }),
+
+    created () {
+      const conn = settings.get('connections')
+      if (typeof conn !== 'undefined') {
+        this.connections = conn
       }
     },
+
     methods: {
       /**
        * Test a connection
@@ -185,14 +223,52 @@
       /**
        * Save a connection
        *
+       * @param {object} conn
        * @param {int} i
+       */
+      save (conn, i = null) {
+        if (i === null) { // If is new, push
+          this.connections.push(conn)
+        }
+
+        // Update saved connections
+        settings.set('connections', this.connections)
+
+        this.connection = {
+          name: null,
+          color: null,
+          host: null,
+          user: null,
+          password: null,
+          database: null
+        }
+      },
+
+      /**
+       * Delete a connection
+       */
+      deleteConn () {
+        this.$swal({
+          title: 'Delete connection',
+          text: 'Are you sure to want to delete the connection "' + this.ctxData.item.name + '"?',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Delete it',
+          cancelButtonText: 'Cancel',
+          confirmButtonColor: '#fe385f'
+        }).then(() => {
+          this.connections.splice(this.ctxData.i, 1)
+          settings.set('connections', this.connections)
+        })
+      },
+
+      /**
+       * Handle context menu open
+       *
        * @param {object} conn
        */
-      save (i, conn) {
-        let connections = settings.get('connections')
-        connections.push(conn)
-
-        settings.set('connections', connections)
+      onCtxOpen (conn) {
+        this.ctxData = conn
       }
     }
   }
@@ -253,6 +329,17 @@
       border: 1px solid rgba(0, 0, 0, 0.3);
       border-radius: 50%;
     }
+  }
+}
+
+#connecting-message {
+  margin-top: 3px;
+
+  .loader {
+    display: inline-block;
+    margin-right: 5px;
+    border-left-color: hsl(0, 0%, 71%);
+    border-bottom-color: hsl(0, 0%, 71%);
   }
 }
 </style>

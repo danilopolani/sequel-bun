@@ -18,7 +18,6 @@ export default {
           return reject(err.message)
         }
 
-        console.log('h')
         resolve(connection)
       })
     })
