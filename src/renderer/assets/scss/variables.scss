@@ -1,3 +1,6 @@
+@import "~bulma/sass/utilities/initial-variables.sass";
+
 $brand-accent: #f04d52;
-$blue: #3273dc;
-$red: #fe385f;
+$primary: $blue;
+
+@import "~bulma/bulma.sass"

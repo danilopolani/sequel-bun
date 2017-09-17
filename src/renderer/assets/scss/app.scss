@@ -21,7 +21,7 @@ aside.menu {
       border-radius: 0;
 
       &:hover {
-        background-color: lighten($blue, 15%);
+        background-color: lighten($blue, 5%);
       }
 
       .button {
@@ -40,6 +40,10 @@ aside.menu {
 
 main {
   background: #ededed;
+}
+
+#top-bar + .section.is-fullheight {
+  height: calc(100% - 56px);
 }
 
 // Context menu
@@ -62,7 +66,7 @@ main {
         font-size: 0.9rem;
 
         &:hover {
-          background-color: lighten($blue, 10%);
+          background-color: lighten($blue, 5%);
           color: #fff !important;
 
           &.has-text-danger {
@@ -106,7 +110,12 @@ main {
 }
 
 // Tabs customize
-.nav-item a.is-tab.is-active,
+.nav-item a:not(.button),
+a.nav-item:not(.button) {
+  color: #555;
+}
+
+/*.nav-item a.is-tab.is-active,
 a.nav-item.is-tab.is-active {
   color: $brand-accent;
   border-bottom-color: $brand-accent;
@@ -115,7 +124,7 @@ a.nav-item.is-tab.is-active {
 .nav-item a.is-tab:hover,
 a.nav-item.is-tab:hover {
   border-bottom-color: $brand-accent;
-}
+}*/
 
 // Good table override
 table .global-search-input {

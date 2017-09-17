@@ -23,9 +23,9 @@
 
     <div class="columns is-fullheight">
       <aside class="column is-one-quarter menu padding-top padding-left">
-        <p class="menu-label"><strong>Connections</strong></p>
-        <ul class="menu-list" v-if="connections.length > 0">
-          <li v-for="(item, i) in connections" @contextmenu.prevent="$refs.ctxMenu.open($event, {i: i, item: item})">
+        <p class="menu-label has-text-weight-bold">Connections</p>
+        <ul class="menu-list" v-if="$parent.connections.length > 0">
+          <li v-for="(item, i) in $parent.connections" @contextmenu.prevent="$refs.ctxMenu.open($event, {i: i, item: item})">
             <a><button class="button" :class="'is-' + item.color">{{ item.name }}</button></a>
           </li>
         </ul>
@@ -67,7 +67,7 @@
                     <div class="column has-text-centered">
                       <i class="fa fa-times vertical-middle pointer" @click="connection.color = null"></i>
                     </div>
-                    <div class="column has-text-centered" v-for="c in ['primary', 'info', 'success', 'warning', 'danger']">
+                    <div class="column has-text-centered" v-for="c in ['turquoise', 'info', 'success', 'warning', 'danger']">
                       <div class="color button" :class="['is-' + c, {'active': c == connection.color}]" @click="connection.color = c"></div>
                     </div>
                   </div>
@@ -195,14 +195,13 @@
         password: null,
         database: null
       },
-      connections: [],
       ctxData: {}
     }),
 
     created () {
       const conn = settings.get('connections')
       if (typeof conn !== 'undefined') {
-        this.connections = conn
+        this.$parent.connections = conn
       }
     },
 
@@ -228,11 +227,11 @@
        */
       save (conn, i = null) {
         if (i === null) { // If is new, push
-          this.connections.push(conn)
+          this.$parent.connections.push(conn)
         }
 
         // Update saved connections
-        settings.set('connections', this.connections)
+        settings.set('connections', this.$parent.connections)
 
         this.connection = {
           name: null,
@@ -257,8 +256,8 @@
           cancelButtonText: 'Cancel',
           confirmButtonColor: '#fe385f'
         }).then(() => {
-          this.connections.splice(this.ctxData.i, 1)
-          settings.set('connections', this.connections)
+          this.$parent.connections.splice(this.ctxData.i, 1)
+          settings.set('connections', this.$parent.connections)
         })
       },
 

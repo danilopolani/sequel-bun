@@ -3,19 +3,22 @@
   margin-top: 10px !important;
 }
 .padding-top {
-  padding-top: 3rem;
+  padding-top: 2rem;
 }
 .padding-right {
   padding-right: 1.5rem;
 }
 .padding-bottom {
-  padding-bottom: 3rem;
+  padding-bottom: 2rem;
 }
 .padding-left {
   padding-left: 1.5rem;
 }
 .no-padding {
   padding: 0;
+}
+.no-padding-bottom {
+  padding-bottom: 0;
 }
 
 // Text & Block alignments
@@ -25,6 +28,11 @@
 }
 .vertical-middle {
   vertical-align: middle;
+}
+
+// Colors
+.is-turquoise {
+  background: $turquoise;
 }
 
 // Positions
