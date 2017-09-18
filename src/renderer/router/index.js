@@ -15,6 +15,22 @@ export default new Router({
       component: require('@/components/Connections')
     },
     {
+      path: '/connected',
+      component: require('@/components/Connected'),
+      children: [
+        {
+          path: '', // Default path
+          name: 'connected',
+          component: require('@/components/Structure')
+        }
+      ]
+    },
+    {
+      path: '/structure',
+      name: 'structure',
+      component: require('@/components/Structure')
+    },
+    {
       path: '*',
       redirect: '/'
     }

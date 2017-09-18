@@ -15,36 +15,30 @@
       <div class="column is-one-quarter padding-left">
         <div class="select">
           <select v-model="connection.i">
-            <option value="0" disabled>Choose connection</option>
+            <option value="-1" disabled>Choose connection</option>
             <option v-for="(conn, i) in connections" :value="i">{{ conn.name }}</option>
           </select>
         </div>
       </div>
-      <div class="column">
+      <div class="column no-padding-left">
         <div class="tabs is-toggle">
           <ul>
-              <router-link to="/table" class="nav-item is-tab">
-                <img src="static/toolbar-switch-to-structure.png" alt="Switch to Structure">
-                Structure
-              </router-link>
-            <li :class="{disabled: connection.db === null}">
-              <router-link to="/table">
-                <img src="static/toolbar-switch-to-browse.png" alt="Switch to Content">
-                Content
-              </router-link>
-            </li>
-            <li :class="{disabled: connection.db === null}">
-              <router-link to="/table">
-                <img src="static/toolbar-switch-to-table-relations.png" alt="Switch to Relations">
-                Relations
-              </router-link>
-            </li>
-            <li :class="{disabled: connection.db === null}">
-              <router-link to="/table">
-                <img src="static/toolbar-switch-to-sql.png" alt="Switch to SQL">
-                Query
-              </router-link>
-            </li>
+            <router-link to="/connected" class="nav-item is-tab" :class="{'is-active': active('connected')}" :event="navigationDisabled">
+              <img src="static/toolbar-switch-to-structure.png" alt="Switch to Structure">
+              Structure
+            </router-link>
+            <router-link to="/connected/content" :event="navigationDisabled">
+              <img src="static/toolbar-switch-to-browse.png" alt="Switch to Content">
+              Content
+            </router-link>
+            <router-link to="/connected/relations" :event="navigationDisabled">
+              <img src="static/toolbar-switch-to-table-relations.png" alt="Switch to Relations">
+              Relations
+            </router-link>
+            <router-link to="/connected/sql" :event="navigationDisabled">
+              <img src="static/toolbar-switch-to-sql.png" alt="Switch to SQL">
+              Query
+            </router-link>
           </ul>
         </div>
       </div>
@@ -64,11 +58,21 @@
     data () {
       return {
         loading: false,
-        connection: {
-          i: 0,
+        connection: { // Current connection
+          i: -1,
           db: null
         },
         connections: [] // Saved connections
+      }
+    },
+    computed: {
+      navigationDisabled () {
+        return this.connection.db === null ? '' : 'click'
+      }
+    },
+    methods: {
+      active (path) {
+        return this.$route.name === path
       }
     }
   }
@@ -142,7 +146,7 @@
     }
 
     .tabs li.disabled a,
-    .tabs a.disabled {
+    .tabs a[disabled] {
       opacity: 0.7;
       background: transparent !important;
       cursor: not-allowed;

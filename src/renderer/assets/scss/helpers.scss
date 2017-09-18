@@ -20,6 +20,17 @@
 .no-padding-bottom {
   padding-bottom: 0;
 }
+.no-padding-left {
+  padding-left: 0;
+}
+
+// Borders
+.no-border-left {
+  border-left: none;
+}
+.no-border-right {
+  border-right: none;
+}
 
 // Text & Block alignments
 .is-block-centered {

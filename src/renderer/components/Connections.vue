@@ -26,7 +26,7 @@
         <p class="menu-label has-text-weight-bold">Connections</p>
         <ul class="menu-list" v-if="$parent.connections.length > 0">
           <li v-for="(item, i) in $parent.connections" @contextmenu.prevent="$refs.ctxMenu.open($event, {i: i, item: item})">
-            <a><button class="button" :class="'is-' + item.color">{{ item.name }}</button></a>
+            <a @click="connect(item, i)"><button class="button" :class="'is-' + item.color">{{ item.name }}</button></a>
           </li>
         </ul>
         <small class="has-text-grey" v-else>No connection yet.</small>
@@ -190,10 +190,11 @@
       connection: {
         name: null,
         color: null,
-        host: null,
+        host: '127.0.0.1',
         user: null,
         password: null,
-        database: null
+        database: null,
+        port: 3306
       },
       ctxData: {}
     }),
@@ -236,11 +237,34 @@
         this.connection = {
           name: null,
           color: null,
-          host: null,
+          host: '127.0.0.1',
           user: null,
           password: null,
-          database: null
+          database: null,
+          port: 3306
         }
+      },
+
+      /**
+       * Connect to a database
+       *
+       * @param {object} conn
+       * @param {int} i
+       */
+      connect (conn, i) {
+        var $vm = this
+
+        Connection.connect(conn, false)
+        .then(db => {
+          this.$parent.connection = {
+            i: i,
+            db: db
+          }
+
+          // Redirect to /content
+          $vm.$router.push('connected')
+        })
+        .catch(err => $vm.$swal('Error', err, 'error'))
       },
 
       /**
