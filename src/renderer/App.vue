@@ -62,14 +62,15 @@
           i: -1,
           ref: null
         },
+        db: null, // Current db
         connections: [], // Saved connections
-        databases: [], // Current conn. dbs
-        tables: [] // Current conn. tables
+        databases: [], // List current conn. dbs
+        tables: [] // List current conn. tables
       }
     },
     computed: {
       navigationDisabled () {
-        return this.connection.ref === null ? '' : 'click'
+        return this.db === null ? '' : 'click'
       }
     },
     methods: {

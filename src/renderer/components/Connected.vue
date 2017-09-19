@@ -21,11 +21,14 @@
     <div class="columns is-fullheight">
       <aside class="column is-one-quarter menu padding-left">
         <!-- Show databases if not selected -->
-        <div v-if="$parent.connection.ref.config.database === null">
+        <div v-if="$parent.db === null">
           <p class="menu-label has-text-weight-bold">Databases</p>
           <ul class="menu-list" v-if="$parent.databases.length > 0">
             <li v-for="db in $parent.databases" @contextmenu.prevent="$refs.ctxMenu.open($event, {db: db})">
-              <a @click="use(db)">{{ db }}</a>
+              <a @click="use(db)">
+                <img src="static/database-small.png" :alt="'Database ' + db" />
+                {{ db }}
+              </a>
             </li>
           </ul>
           <small class="has-text-grey" v-else>No database found.</small>
@@ -34,7 +37,10 @@
           <p class="menu-label has-text-weight-bold">Tables</p>
           <ul class="menu-list" v-if="$parent.tables.length > 0">
             <li v-for="table in $parent.tables" @contextmenu.prevent="$refs.ctxMenu.open($event, {tabls: table})">
-              <a @click="show(table)">{{ table }}</a>
+              <a @click="show(table)">
+                <img src="static/table-small.png" :alt="'Table ' + table" />
+                {{ table }}
+              </a>
             </li>
           </ul>
           <small class="has-text-grey" v-else>No table found.</small>
@@ -54,7 +60,8 @@
   export default {
     name: 'connected',
     data: () => ({
-      ctxData: {}
+      ctxData: {},
+      conn: null
     }),
 
     /**
@@ -63,8 +70,11 @@
     created () {
       let $vm = this
 
+      // Assign conn
+      $vm.conn = $vm.$parent.connection.ref
+
       // Retrieve databases
-      $vm.$parent.connection.ref.query('SHOW DATABASES')
+      $vm.conn.query('SHOW DATABASES')
       .then(res => {
         $vm.$parent.databases = res.map(row => row.Database)
       })
@@ -73,18 +83,41 @@
       })
 
       // Retrieve tables, if database selected
-      if ($vm.$parent.connection.config.database !== null) {
-        $vm.$parent.connection.ref.query('SHOW TABLES')
-        .then(res => {
-          $vm.$parent.tables = res.map(row => row.Table)
-        })
-        .catch(err => {
-          $vm.$swal('Error', 'Error retrieving tables: ' + err.message, 'error')
-        })
+      if ($vm.conn.config.database !== null) {
+        $vm.tables()
       }
     },
 
     methods: {
+      /**
+       * Change database
+       *
+       * @param {string} db
+       */
+      use (db) {
+        let $vm = this
+
+        $vm.conn.changeUser({database: db}, () => {
+          $vm.$parent.db = db
+          $vm.tables()
+        })
+      },
+
+      /**
+       * Retrieve database tables
+       */
+      tables () {
+        let $vm = this
+
+        $vm.$parent.connection.ref.query('SHOW TABLES')
+        .then(res => {
+          $vm.$parent.tables = res.map(row => row['Tables_in_' + $vm.$parent.db])
+        })
+        .catch(err => {
+          $vm.$swal('Error', 'Error retrieving tables: ' + err.message, 'error')
+        })
+      },
+
       /**
        * Handle context menu open
        *
@@ -98,4 +131,15 @@
 </script>
 
 <style lang="scss">
+aside.menu ul.menu-list li a {
+  img {
+    position: relative;
+    top: 2px;
+    margin-right: 5px;
+  }
+
+  &:hover {
+    color: #fff;
+  }
+}
 </style>
