@@ -62,7 +62,6 @@
           i: -1,
           ref: null
         },
-        db: null, // Current db
         connections: [], // Saved connections
         databases: [], // Current conn. dbs
         tables: [] // Current conn. tables
@@ -70,7 +69,7 @@
     },
     computed: {
       navigationDisabled () {
-        return this.connection.db === null ? '' : 'click'
+        return this.connection.ref === null ? '' : 'click'
       }
     },
     methods: {
