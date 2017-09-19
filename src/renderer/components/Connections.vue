@@ -252,19 +252,7 @@
        * @param {int} i
        */
       connect (conn, i) {
-        var $vm = this
-
-        Connection.connect(conn, false)
-        .then(db => {
-          this.$parent.connection = {
-            i: i,
-            db: db
-          }
-
-          // Redirect to /content
-          $vm.$router.push('connected')
-        })
-        .catch(err => $vm.$swal('Error', err, 'error'))
+        this.$parent.connect(conn, i)
       },
 
       /**

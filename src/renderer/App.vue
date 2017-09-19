@@ -51,7 +51,7 @@
 <script>
   // import _ from 'lodash'
   // import * as moment from 'moment'
-  // import Connection from './services/Connection'
+  import Connection from './services/Connection'
 
   export default {
     name: 'sequel-bun',
@@ -60,9 +60,12 @@
         loading: false,
         connection: { // Current connection
           i: -1,
-          db: null
+          ref: null
         },
-        connections: [] // Saved connections
+        db: null, // Current db
+        connections: [], // Saved connections
+        databases: [], // Current conn. dbs
+        tables: [] // Current conn. tables
       }
     },
     computed: {
@@ -71,8 +74,35 @@
       }
     },
     methods: {
+      /**
+       * Check if current item is active
+       *
+       * @param {string} path
+       */
       active (path) {
         return this.$route.name === path
+      },
+
+      /**
+       * Connect to a database
+       *
+       * @param {object} conn
+       * @param {int} i
+       */
+      connect (conn, i) {
+        var $vm = this
+
+        Connection.connect(conn, false)
+        .then(ref => {
+          this.connection = {
+            i: i,
+            ref: ref
+          }
+
+          // Redirect to /content
+          $vm.$router.push('connected')
+        })
+        .catch(err => $vm.$swal('Error', err, 'error'))
       }
     }
   }

@@ -1,6 +1,8 @@
-const mysql = require('mysql')
+const mysql = require('promise-mysql')
 
 export default {
+  ref: null,
+
   /**
    * Test a connection
    *
@@ -8,17 +10,19 @@ export default {
    * @return Promise
    */
   connect (conn, init = true) {
+    let $vm = this
+
     return new Promise(function (resolve, reject) {
       // Create connection
-      let connection = mysql.createConnection(conn)
+      mysql.createConnection(conn)
+      .then(res => {
+        $vm.ref = res
 
-      // Try to connect
-      connection.connect(err => {
-        if (err) {
-          return reject(err.message)
-        }
-
-        resolve(connection)
+        if (init) res.end()
+        resolve(res)
+      })
+      .catch(err => {
+        reject(err.message)
       })
     })
   }
