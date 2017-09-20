@@ -65,7 +65,8 @@
         db: null, // Current db
         connections: [], // Saved connections
         databases: [], // List current conn. dbs
-        tables: [] // List current conn. tables
+        tables: [], // List current conn. tables,
+        tables_fields: {} // Tables fields
       }
     },
     computed: {

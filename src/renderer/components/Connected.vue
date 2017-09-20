@@ -34,12 +34,22 @@
           <small class="has-text-grey" v-else>No database found.</small>
         </div>
         <div v-else>
+          <!-- Change database -->
+          <p class="menu-label has-text-weight-bold">Databases</p>
+          <div class="select">
+            <select v-model="$parent.db">
+              <option value="-1" disabled>Change database</option>
+              <option v-for="db in $parent.databases" :value="db">{{ db }}</option>
+            </select>
+          </div>
+
+          <!-- Tables list -->
           <p class="menu-label has-text-weight-bold">Tables</p>
           <ul class="menu-list" v-if="$parent.tables.length > 0">
-            <li v-for="table in $parent.tables" @contextmenu.prevent="$refs.ctxMenu.open($event, {tabls: table})">
-              <a @click="show(table)">
-                <img src="static/table-small.png" :alt="'Table ' + table" />
-                {{ table }}
+            <li v-for="t in $parent.tables" @contextmenu.prevent="$refs.ctxMenu.open($event, {table: t})">
+              <a @click="structure(t)" :class="{'is-active': t == table}">
+                <img src="static/table-small.png" :alt="'Table ' + t" />
+                {{ t }}
               </a>
             </li>
           </ul>
@@ -61,7 +71,9 @@
     name: 'connected',
     data: () => ({
       ctxData: {},
-      conn: null
+      conn: null,
+      table: null, // Current table
+      fields: []
     }),
 
     /**
@@ -100,6 +112,34 @@
         $vm.conn.changeUser({database: db}, () => {
           $vm.$parent.db = db
           $vm.tables()
+        })
+      },
+
+      /**
+       * Show table structure
+       *
+       * @param {string} db
+       */
+      structure (table) {
+        let $vm = this
+
+        $vm.table = table
+        $vm.fields = []
+
+        // Retrieve from history
+        if ($vm.$parent.tables_fields.hasOwnProperty(table)) {
+          $vm.fields = $vm.$parent.tables_fields[table]
+          return
+        }
+
+        // Retrieve structure
+        $vm.$parent.connection.ref.query('DESCRIBE ' + table)
+        .then(res => {
+          $vm.fields = res
+          $vm.$parent.tables_fields[table] = res
+        })
+        .catch(err => {
+          $vm.$swal('Error', 'Error retrieving table info: ' + err.message, 'error')
         })
       },
 

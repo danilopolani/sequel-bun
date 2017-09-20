@@ -6,35 +6,22 @@
         <th class="no-border-left">Type</th>
         <th class="no-border-left">Length</th>
         <th class="no-border-left">Unsigned</th>
-        <th class="no-border-left">Allow Null</th>
+        <th class="no-border-left">Null</th>
         <th class="no-border-left">Key</th>
         <th class="no-border-left">Default</th>
         <th class="no-border-left">Extra</th>
-        <th class="no-border-left">Comment</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td class="no-border-left">id</td>
-        <td class="no-border-left">INT</td>
-        <td class="no-border-left">11</td>
-        <td class="no-border-left">[x]</td>
-        <td class="no-border-left">[ ]</td>
-        <td class="no-border-left">PRIMARY</td>
-        <td class="no-border-left"></td>
-        <td class="no-border-left">auto_increment</td>
-        <td class="no-border-left"></td>
-      </tr>
-      <tr>
-        <td class="no-border-left">user_id</td>
-        <td class="no-border-left">VARCHAR</td>
-        <td class="no-border-left">255</td>
-        <td class="no-border-left">[ ]</td>
-        <td class="no-border-left">[x]</td>
-        <td class="no-border-left"></td>
-        <td class="no-border-left">NULL</td>
-        <td class="no-border-left">None</td>
-        <td class="no-border-left"></td>
+      <tr v-for="field in $parent.fields">
+        <td class="no-border-left">{{ field.Field }}</td>
+        <td class="no-border-left">{{ field.Type }}</td>
+        <td class="no-border-left">{{ field.Type }}</td>
+        <td class="no-border-left">{{ field.Type }}</td>
+        <td class="no-border-left">{{ field.Null }}</td>
+        <td class="no-border-left">{{ field.Key }}</td>
+        <td class="no-border-left">{{ field.Default }}</td>
+        <td class="no-border-left">{{ field.Extra }}</td>
       </tr>
     </tbody>
   </table>
@@ -63,4 +50,7 @@
 </script>
 
 <style lang="scss">
+table {
+  overflow-x: auto;
+}
 </style>
