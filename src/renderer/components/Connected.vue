@@ -477,7 +477,7 @@
 
             return {
               name: f.Field,
-              type: fType,
+              type: fType.toUpperCase(),
               len: fLen,
               unsigned: fUnsigned,
               null: f.Null,
