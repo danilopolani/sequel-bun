@@ -135,8 +135,39 @@
         // Retrieve structure
         $vm.$parent.connection.ref.query('DESCRIBE ' + table)
         .then(res => {
-          $vm.fields = res
-          $vm.$parent.tables_fields[table] = res
+          // Parse fields
+          $vm.fields = res.map(f => {
+            let fUnsigned = false
+            let fLen = null
+
+            let fData = f.Type.split(' ') // Ex: int(11) unsigned
+            let fType = fData[0]
+
+            // Check if unsigned
+            if (fData.length > 1) {
+              fUnsigned = true
+            }
+
+            // Retrieve length
+            if (fType.indexOf('(') > -1) {
+              fLen = fType.match(/\(([0-9]+)\)/g)[0].replace('(', '').replace(')', '')
+              fType = fType.replace('(' + fLen + ')', '')
+            }
+
+            return {
+              name: f.Field,
+              type: fType,
+              len: fLen,
+              unsigned: fUnsigned,
+              null: f.Null,
+              key: f.Key,
+              default: f.Default,
+              extra: f.Extra
+            }
+          })
+
+          // Cache fields
+          $vm.$parent.tables_fields[table] = $vm.fields
         })
         .catch(err => {
           $vm.$swal('Error', 'Error retrieving table info: ' + err.message, 'error')
@@ -171,6 +202,10 @@
 </script>
 
 <style lang="scss">
+main {
+  overflow-x: auto;
+}
+
 aside.menu ul.menu-list li a {
   img {
     position: relative;
