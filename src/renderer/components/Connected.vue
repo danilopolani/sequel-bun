@@ -21,9 +21,9 @@
     <div class="columns is-fullheight">
       <aside class="column is-one-quarter menu padding-left">
         <!-- Show databases if not selected -->
-        <div v-if="$parent.db === null">
+        <div v-if="$parent.db === null" class="is-fullheight">
           <p class="menu-label has-text-weight-bold">Databases</p>
-          <ul class="menu-list" v-if="$parent.databases.length > 0">
+          <ul class="menu-list overflow" v-if="$parent.databases.length > 0">
             <li v-for="db in $parent.databases" @contextmenu.prevent="$refs.ctxMenu.open($event, {db: db})">
               <a @click="use(db)">
                 <img src="static/database-small.png" :alt="'Database ' + db" />
@@ -33,7 +33,7 @@
           </ul>
           <small class="has-text-grey" v-else>No database found.</small>
         </div>
-        <div v-else>
+        <div class="is-fullheight" v-else>
           <!-- Change database -->
           <p class="menu-label has-text-weight-bold">Databases</p>
           <div class="select">
@@ -45,14 +45,14 @@
 
           <!-- Tables list -->
           <p class="menu-label has-text-weight-bold">Tables</p>
-          <ul class="menu-list" v-if="$parent.tables.length > 0">
-            <li v-for="t in $parent.tables" @contextmenu.prevent="$refs.ctxMenu.open($event, {table: t})">
-              <a @click="structure(t)" :class="{'is-active': t == table}">
-                <img src="static/table-small.png" :alt="'Table ' + t" />
-                {{ t }}
-              </a>
-            </li>
-          </ul>
+            <ul class="menu-list overflow" v-if="$parent.tables.length > 0">
+              <li v-for="t in $parent.tables" @contextmenu.prevent="$refs.ctxMenu.open($event, {table: t})">
+                <a @click="structure(t)" :class="{'is-active': t == table}">
+                  <img src="static/table-small.png" :alt="'Table ' + t" />
+                  {{ t }}
+                </a>
+              </li>
+            </ul>
           <small class="has-text-grey" v-else>No table found.</small>
         </div>
       </aside>
@@ -73,7 +73,328 @@
       ctxData: {},
       conn: null,
       table: null, // Current table
-      fields: []
+      fields: [],
+      common_column_types: [
+        {
+          name: 'INT',
+          default: 11,
+          group: false,
+          children: []
+        },
+        {
+          name: 'VARCHAR',
+          default: 255,
+          group: false,
+          children: []
+        },
+        {
+          name: 'TEXT',
+          default: null,
+          group: false,
+          children: []
+        },
+        {
+          name: 'DATETIME',
+          default: null,
+          group: false,
+          children: []
+        }
+      ],
+      column_types: [
+        {
+          name: 'Numeric',
+          default: null,
+          group: true,
+          children: [
+            {
+              name: 'TINYINT',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'SMALLINT',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'MEDIUMINT',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'INT',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: '-',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'DECIMAL',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'FLOAT',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'DOUBLE',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'REAL',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: '-',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'BIT',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'BOOLEAN',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'SERIAL',
+              default: null,
+              group: false,
+              children: []
+            }
+          ]
+        },
+        {
+          name: 'Date and time',
+          default: null,
+          group: true,
+          children: [
+            {
+              name: 'DATE',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'DATETIME',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'TIMESTAMP',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'TIME',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'YEAR',
+              default: null,
+              group: false,
+              children: []
+            }
+          ]
+        },
+        {
+          name: 'String',
+          default: null,
+          group: true,
+          children: [
+            {
+              name: 'CHAR',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'VARCHAR',
+              default: 255,
+              group: false,
+              children: []
+            },
+            {
+              name: '-',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'TINYTEXT',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'TEXT',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'MEDIUMTEXT',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'LONGTEXT',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: '-',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'BINARY',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'VARBINARY',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: '-',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'TINYBLOB',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'BLOB',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: '-',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'ENUM',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'SET',
+              default: null,
+              group: false,
+              children: []
+            }
+          ]
+        },
+        {
+          name: 'Spatial',
+          default: null,
+          group: true,
+          children: [
+            {
+              name: 'GEOMETRY',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'POINT',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'LINESTRING',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'POLYGON',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'MULTIPOINT',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'MULTILINESTRING',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'MULTIPOLYGON',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
+              name: 'GEOMETRYCOLLECTION',
+              default: null,
+              group: false,
+              children: []
+            }
+          ]
+        },
+        {
+          name: 'JSON',
+          default: null,
+          group: true,
+          children: [
+            {
+              name: 'JSON',
+              default: null,
+              group: false,
+              children: []
+            }
+          ]
+        }
+      ]
     }),
 
     /**

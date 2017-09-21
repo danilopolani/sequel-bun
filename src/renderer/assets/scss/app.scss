@@ -15,9 +15,14 @@ aside.menu {
     margin-left: -1.5rem;
     margin-right: calc(-1.5rem + 10px);
 
+    &.overflow {
+      overflow-x: auto;
+      max-height: calc(100% - 100px);
+    }
+
     li a {
-      padding-left: 15px;
-      padding-right: 15px;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
       border-radius: 0;
 
       &:hover {

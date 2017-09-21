@@ -15,7 +15,22 @@
     <tbody>
       <tr v-for="field in $parent.fields">
         <td class="no-border-left">{{ field.name }}</td>
-        <td class="no-border-left">{{ field.type }}</td>
+        <td class="no-border-left">
+          <div class="select">
+            <select v-model="field.type">
+              <!-- Common types -->
+              <option v-for="commonType in $parent.common_column_types" :value="commonType.name">
+                {{ commonType.name }}
+              </option>
+              <!-- All grouped -->
+              <optgroup v-for="typeGroup in $parent.column_types" :label="typeGroup.name">
+                <option v-for="typeGroupType in typeGroup.children" :value="typeGroupType.name" :disabled="typeGroupType.name == '-'">
+                  {{ typeGroupType.name }}
+                </option>
+              </optgroup>
+            </select>
+          </div>
+        </td>
         <td class="no-border-left">{{ field.len }}</td>
         <td class="no-border-left">
           <input type="checkbox" :checked="field.unsigned">
