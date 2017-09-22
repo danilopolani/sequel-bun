@@ -471,8 +471,11 @@
 
             // Retrieve length
             if (fType.indexOf('(') > -1) {
-              fLen = fType.match(/\(([0-9]+)\)/g)[0].replace('(', '').replace(')', '')
-              fType = fType.replace('(' + fLen + ')', '')
+              let fLenMatch = fType.match(/\(([^)]+)\)/g)
+              if (fLenMatch !== null) {
+                fLen = fLenMatch[0].replace('(', '').replace(')', '')
+                fType = fType.replace('(' + fLen + ')', '')
+              }
             }
 
             return {
@@ -525,6 +528,11 @@
 <style lang="scss">
 main {
   overflow-x: auto;
+
+  table th,
+  table td {
+    vertical-align: middle !important;
+  }
 }
 
 aside.menu ul.menu-list li a {

@@ -3,19 +3,19 @@
     <thead>
       <tr>
         <th class="no-border-left">Field</th>
-        <th class="no-border-left">Type</th>
-        <th class="no-border-left">Length</th>
-        <th class="no-border-left">Unsigned</th>
-        <th class="no-border-left">Allow Null</th>
-        <th class="no-border-left">Key</th>
-        <th class="no-border-left">Default</th>
-        <th class="no-border-left">Extra</th>
+        <th>Type</th>
+        <th>Length</th>
+        <th>Unsigned</th>
+        <th>Allow Null</th>
+        <th>Key</th>
+        <th>Default</th>
+        <th class="no-border-right">Extra</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="field in $parent.fields">
         <td class="no-border-left">{{ field.name }}</td>
-        <td class="no-border-left">
+        <td>
           <div class="select">
             <select v-model="field.type">
               <!-- Common types -->
@@ -31,16 +31,16 @@
             </select>
           </div>
         </td>
-        <td class="no-border-left">{{ field.len }}</td>
-        <td class="no-border-left">
+        <td><editable :content="field.len" @update="field.len == $event"></editable></td>
+        <td>
           <input type="checkbox" :checked="field.unsigned">
         </td>
-        <td class="no-border-left">
+        <td>
           <input type="checkbox" :checked="field.null">
         </td>
-        <td class="no-border-left">{{ field.key }}</td>
-        <td class="no-border-left">{{ field.default }}</td>
-        <td class="no-border-left">{{ field.extra }}</td>
+        <td>{{ field.key }}</td>
+        <td>{{ field.default }}</td>
+        <td class="no-border-right">{{ field.extra }}</td>
       </tr>
     </tbody>
   </table>
