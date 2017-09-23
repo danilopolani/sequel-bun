@@ -113,6 +113,10 @@
   $fa-font-path: "~font-awesome/fonts";
   @import "~font-awesome/scss/font-awesome";
 
+  html {
+    overflow-y: hidden;
+  }
+
   html,
   body,
   #app {
@@ -157,7 +161,7 @@
       display: block;
       padding: 0em 1em 0.3em 1em;
       font-size: 0.9rem;
-      border-radius: 0;
+      border-radius: 5px 5px 0 0;
       border: none;
 
       img {
@@ -170,9 +174,9 @@
 
     .tabs li.is-active a,
     .tabs a.is-active {
-      background: lighten($blue, 5%);
-      background-color: #3273dc;
-      color: #fff;
+      background: #c3c3c3;
+      border-radius: 5px 5px 0 0;
+      color: #434343;
       z-index: 1;
     }
 

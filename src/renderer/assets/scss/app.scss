@@ -8,9 +8,13 @@ html {
 
 // Structure
 aside.menu {
-  background: #f0f0f0;
-  border-right: 1px solid #d9d9d9;
+  background: #d7e0ef;
+  border-right: 1px solid #d4d4d4;
   
+  .menu-label {
+    color: #586270;
+  }
+
   .menu-list {
     margin-left: -1.5rem;
     margin-right: calc(-1.5rem + 10px);
@@ -24,9 +28,12 @@ aside.menu {
       padding-left: 1.5rem;
       padding-right: 1.5rem;
       border-radius: 0;
+      font-size: 0.95rem;
 
+      &.is-active,
       &:hover {
-        background-color: $blue;
+        background-color: #94add2;
+        color: #000020 !important;
       }
 
       .button {
@@ -47,8 +54,41 @@ main {
   background: #ededed;
 }
 
-#top-bar + .section.is-fullheight {
-  height: calc(100% - 56px);
+#top-bar {
+  border-bottom: 1px solid #686868;
+
+  + .section.is-fullheight {
+    height: calc(100% - 56px);
+  } 
+}
+
+.with-action-bar {
+  height: calc(100% - 33px);
+}
+
+.action-bar {
+  border-top: 1px solid #c5c5c5;
+  border-bottom: 1px solid #d4d4d4;
+  background: #f9f9f9;
+  background: -moz-linear-gradient(top, #f9f9f9 0%, #f9f9f9 50%, #ebebeb 51%, #ebebeb 100%);
+  background: -webkit-linear-gradient(top, #f9f9f9 0%,#f9f9f9 50%,#ebebeb 51%,#ebebeb 100%);
+  background: linear-gradient(to bottom, #f9f9f9 0%,#f9f9f9 50%,#ebebeb 51%,#ebebeb 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9f9f9', endColorstr='#ebebeb',GradientType=0 );
+
+  .button {
+    background: transparent;
+    border: none;
+    border-right: 1px solid #c5c5c5;
+    border-radius: 0;
+
+    .icon {
+      width: 2rem;
+
+      i {
+        color: #474747;
+      }
+    }
+  }
 }
 
 // Context menu
@@ -71,7 +111,7 @@ main {
         font-size: 0.9rem;
 
         &:hover {
-          background-color: lighten($blue, 5%);
+          background-color: #94add2;
           color: #fff !important;
 
           &.has-text-danger {
@@ -86,6 +126,13 @@ main {
 // Forms
 .is-horizontal label {
   font-weight: normal;
+}
+input.masked {
+  background: transparent;
+  border: 0;
+}
+.select select {
+  border-radius: 5px;
 }
 
 // Buttons
@@ -118,35 +165,4 @@ main {
 .nav-item a:not(.button),
 a.nav-item:not(.button) {
   color: #555;
-}
-
-/*.nav-item a.is-tab.is-active,
-a.nav-item.is-tab.is-active {
-  color: $brand-accent;
-  border-bottom-color: $brand-accent;
-}
-
-.nav-item a.is-tab:hover,
-a.nav-item.is-tab:hover {
-  border-bottom-color: $brand-accent;
-}*/
-
-// Good table override
-table .global-search-input {
-  width: 300px !important;
-  float: right;
-  border-radius: 0 !important;
-}
-table .global-search-icon > img {
-  display: none;
-}
-table.table-bordered {
-  border-color: #eee;
-}
-table td,
-table th {
-  background: none !important;
-}
-table th.line-numbers {
-  background: rgba(35, 41, 53, .05) !important;
 }

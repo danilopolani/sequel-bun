@@ -131,6 +131,12 @@
               children: []
             },
             {
+              name: 'BIGINT',
+              default: null,
+              group: false,
+              children: []
+            },
+            {
               name: '-',
               default: null,
               group: false,
@@ -483,7 +489,7 @@
               type: fType.toUpperCase(),
               len: fLen,
               unsigned: fUnsigned,
-              null: f.Null,
+              null: f.Null === 'YES',
               key: f.Key,
               default: f.Default,
               extra: f.Extra
@@ -527,11 +533,71 @@
 
 <style lang="scss">
 main {
-  overflow-x: auto;
+  overflow: auto;
+  padding-right: 0.75rem !important;
+
+  .main-table {
+    height: 60%;
+  }
+
+  .secondary-table {
+    height: 40%;
+  }
+
+  .scrollable {
+    overflow: auto;
+  }
+
+  .scrollable-x {
+    overflow-x: auto;
+  }
+
+  table.table {
+    margin-bottom: 0;
+
+    th {
+      white-space: nowrap;
+      border-bottom: 1px solid #d6d6d6 !important;
+      position: relative;
+
+      &::before {
+        position: absolute;
+        width: 1px;
+        height: 60%;
+        top: 20%;
+        left: -4px;
+        background: #e5e5e5;
+        content: '';
+      }
+    }
+
+    tr:hover {
+      background: $primary !important;
+      * {
+        color: #fff !important;
+      }
+    }
+  }
 
   table th,
   table td {
     vertical-align: middle !important;
+    border: none !important;
+
+    input[type="checkbox"] {
+      cursor: pointer;
+    }
+
+    input[type="text"] {
+      width: 60px;
+      display: table;
+      text-overflow: ellipsis;
+    }
+
+    .select select {
+      background: transparent;
+      border: none;
+    }
   }
 }
 
