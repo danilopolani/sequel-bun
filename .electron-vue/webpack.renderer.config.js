@@ -18,7 +18,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
  * that provide pure *.vue files that need compiling
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/webpack-configurations.html#white-listing-externals
  */
-let whiteListedModules = ['vue', 'vue-context-menu', 'vue-materialize-datatable', 'vue-sweetalert', 'vue-chartjs', 'chart.js', 'moment', 'font-awesome']
+let whiteListedModules = ['vue', 'vue-context-menu', 'vue-materialize-datatable', 'vue-sweetalert', 'perfect-scrollbar', 'vue-perfect-scrollbar', 'vue-chartjs', 'chart.js', 'moment', 'font-awesome']
 
 let rendererConfig = {
   devtool: '#cheap-module-eval-source-map',

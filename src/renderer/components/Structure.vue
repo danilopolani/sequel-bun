@@ -2,7 +2,7 @@
   <div class="is-fullheight">
     <!-- Table structure -->
     <div class="main-table">
-      <div class="scrollable with-action-bar">
+      <VuePerfectScrollbar class="scrollable with-action-bar">
         <table class="table is-striped is-narrow is-fullwidth">
           <thead>
             <tr>
@@ -17,8 +17,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="field in $parent.fields">
-              <td class="no-border-left">{{ field.name }}</td>
+            <tr v-for="field in $parent.fields" :class="{'is-active': currentField == field.name}" @click="currentField = field.name">
+              <td class="no-border-left has-input">
+                <input type="text" v-model="field.name" class="masked" :readonly="!editInput" @dblclick="editInput = true" @blur="editInput = false">
+              </td>
               <td>
                 <div class="select">
                   <select v-model="field.type">
@@ -35,8 +37,8 @@
                   </select>
                 </div>
               </td>
-              <td>
-                <input type="text" v-model="field.len" class="masked">
+              <td class="has-input">
+                <input type="text" v-model="field.len" class="masked smaller" :readonly="!editInput" @dblclick="editInput = true" @blur="editInput = false">
               </td>
               <td class="has-text-centered">
                 <input type="checkbox" :checked="field.unsigned">
@@ -53,14 +55,32 @@
                   </select>
                 </div>
               </td>
-              <td>
-                <input type="text" v-model="field.default" class="masked">
+              <td class="has-input">
+                <input type="text" v-model="field.default" class="masked" :readonly="!editInput" @dblclick="editInput = true" @blur="editInput = false">
               </td>
               <td class="no-border-right">{{ field.extra }}</td>
             </tr>
+
+            <!-- New column -->
+            <tr v-if="$parent.table !== null">
+              <td class="has-input">
+                <input type="text" v-model="newColumn" class="masked" placeholder="New column name" />
+              </td>
+              <td>
+                <div class="select is-invisible"><!-- Just to create the correct height -->
+                  <select></select>
+                </div>
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
           </tbody>
         </table>
-      </div><!-- /scrollable -->
+      </VuePerfectScrollbar><!-- /scrollable -->
 
       <!-- Action bar -->
       <div class="action-bar field has-addons">
@@ -69,7 +89,7 @@
             <i class="fa fa-plus"></i>
           </span>
         </a>
-        <a class="button">
+        <a class="button" :disabled="currentField === null">
           <span class="icon is-small">
             <i class="fa fa-minus"></i>
           </span>
@@ -90,9 +110,17 @@
 </template>
 
 <script>
+  import VuePerfectScrollbar from 'vue-perfect-scrollbar'
+
   export default {
     name: 'structure',
+    components: {
+      VuePerfectScrollbar
+    },
     data: () => ({
+      newColumn: null,
+      currentField: null,
+      editInput: false,
       ctxData: {}
     }),
 

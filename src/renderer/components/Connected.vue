@@ -571,10 +571,14 @@ main {
       }
     }
 
-    tr:hover {
+    tr.is-active {
       background: $primary !important;
       * {
         color: #fff !important;
+      }
+
+      .select::after {
+        border-color: #fff !important;
       }
     }
   }
@@ -584,19 +588,45 @@ main {
     vertical-align: middle !important;
     border: none !important;
 
+    &.has-input {
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+
+      input {
+        padding-top: 0.25em;
+        padding-bottom: 0.25em;
+      }
+    }
+
     input[type="checkbox"] {
       cursor: pointer;
     }
 
     input[type="text"] {
-      width: 60px;
       display: table;
       text-overflow: ellipsis;
+
+      &.smaller {
+        width: 60px;
+      }
     }
 
-    .select select {
-      background: transparent;
-      border: none;
+    .select {
+      &:hover::after {
+        border-color: $primary;
+      }
+
+      select {
+        background: transparent;
+        border: none;
+        outline: none;
+        border-radius: 0;
+
+        &:focus {
+          border: none;
+          box-shadow: none;
+        }
+      }
     }
   }
 }
