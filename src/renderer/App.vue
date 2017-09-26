@@ -23,19 +23,19 @@
       <div class="column no-padding-left">
         <div class="tabs is-toggle">
           <ul>
-            <router-link to="/connected" class="nav-item is-tab" :class="{'is-active': active('connected')}" :event="navigationDisabled">
+            <router-link to="/connected" :disabled="navigationDisabled('connected') === ''" :class="{'is-active': active('connected')}" :event="navigationDisabled('connected')">
               <img src="static/toolbar-switch-to-structure.png" alt="Switch to Structure">
               Structure
             </router-link>
-            <router-link to="/connected/content" :event="navigationDisabled">
+            <router-link to="/connected/content" :disabled="navigationDisabled('content') === ''" :class="{'is-active': active('content')}" :event="navigationDisabled('content')">
               <img src="static/toolbar-switch-to-browse.png" alt="Switch to Content">
               Content
             </router-link>
-            <router-link to="/connected/relations" :event="navigationDisabled">
+            <router-link to="/connected/relations" :disabled="navigationDisabled('relations') === ''" :class="{'is-active': active('relations')}" :event="navigationDisabled('relations')">
               <img src="static/toolbar-switch-to-table-relations.png" alt="Switch to Relations">
               Relations
             </router-link>
-            <router-link to="/connected/sql" :event="navigationDisabled">
+            <router-link to="/connected/sql" :disabled="navigationDisabled('sql') === ''" :class="{'is-active': active('sql')}" :event="navigationDisabled('sql')">
               <img src="static/toolbar-switch-to-sql.png" alt="Switch to SQL">
               Query
             </router-link>
@@ -66,12 +66,8 @@
         connections: [], // Saved connections
         databases: [], // List current conn. dbs
         tables: [], // List current conn. tables,
-        tables_fields: {} // Tables fields
-      }
-    },
-    computed: {
-      navigationDisabled () {
-        return this.db === null ? '' : 'click'
+        tables_fields: {}, // Tables fields
+        table: null // Current table
       }
     },
     methods: {
@@ -82,6 +78,20 @@
        */
       active (path) {
         return this.$route.name === path
+      },
+
+      /**
+       * Check if enable navigation
+       *
+       * @param {string} path
+       * @return {bool}
+       */
+      navigationDisabled (path) {
+        if (path === 'connected' || path === 'sql') {
+          return this.db === null ? '' : 'click'
+        }
+
+        return this.table === null ? '' : 'click'
       },
 
       /**

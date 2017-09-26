@@ -1,7 +1,7 @@
 {
   "name": "sequel-bun",
   "version": "1.0.0",
-  "author": "Grork <Danilo Polani> <danilo.polani@gmail.com>",
+  "author": "Danilo <Grork> Polani <danilo.polani@gmail.com>",
   "description": "SQL client GUI for Ubuntu",
   "license": null,
   "main": "./dist/electron/main.js",

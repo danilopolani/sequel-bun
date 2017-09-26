@@ -24,13 +24,13 @@ export default new Router({
           path: '', // Default path
           name: 'connected',
           component: require('@/components/Structure')
+        },
+        {
+          path: 'content',
+          name: 'content',
+          component: require('@/components/Content')
         }
       ]
-    },
-    {
-      path: '/structure',
-      name: 'structure',
-      component: require('@/components/Structure')
     },
     {
       path: '*',

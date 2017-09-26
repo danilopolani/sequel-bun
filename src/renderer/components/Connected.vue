@@ -451,6 +451,7 @@
         let $vm = this
 
         $vm.table = table
+        $vm.$parent.table = table
         $vm.fields = []
 
         // Retrieve from history
@@ -565,7 +566,7 @@ main {
         width: 1px;
         height: 60%;
         top: 20%;
-        left: -4px;
+        left: 0;
         background: #e5e5e5;
         content: '';
       }
