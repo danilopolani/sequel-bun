@@ -23,8 +23,8 @@
         <!-- Show databases if not selected -->
         <div v-if="$parent.db === null" class="is-fullheight">
           <p class="menu-label has-text-weight-bold">Databases</p>
-          <ul class="menu-list overflow" v-if="$parent.databases.length > 0">
-            <li v-for="db in $parent.databases" @contextmenu.prevent="$refs.ctxMenu.open($event, {db: db})">
+          <ul class="menu-list overflow" v-if="databases.length > 0">
+            <li v-for="db in databases" @contextmenu.prevent="$refs.ctxMenu.open($event, {db: db})">
               <a @click="use(db)">
                 <img src="static/database-small.png" :alt="'Database ' + db" />
                 {{ db }}
@@ -33,20 +33,21 @@
           </ul>
           <small class="has-text-grey" v-else>No database found.</small>
         </div>
+        <!-- Otherwise, show tables -->
         <div class="is-fullheight" v-else>
           <!-- Change database -->
           <p class="menu-label has-text-weight-bold">Databases</p>
           <div class="select">
             <select v-model="$parent.db">
-              <option value="-1" disabled>Change database</option>
-              <option v-for="db in $parent.databases" :value="db">{{ db }}</option>
+              <option value="-1" disabled>Choose database</option>
+              <option v-for="db in databases" :value="db">{{ db }}</option>
             </select>
           </div>
 
           <!-- Tables list -->
           <p class="menu-label has-text-weight-bold">Tables</p>
-            <ul class="menu-list overflow" v-if="$parent.tables.length > 0">
-              <li v-for="t in $parent.tables" @contextmenu.prevent="$refs.ctxMenu.open($event, {table: t})">
+            <ul class="menu-list overflow" v-if="tables.length > 0">
+              <li v-for="t in tables" @contextmenu.prevent="$refs.ctxMenu.open($event, {table: t})">
                 <a @click="structure(t)" :class="{'is-active': t == table}">
                   <img src="static/table-small.png" :alt="'Table ' + t" />
                   {{ t }}
@@ -73,7 +74,14 @@
       ctxData: {},
       conn: null,
       table: null, // Current table
-      fields: [],
+      columns: [], // Current table columns
+      primary_key: null, // Current table primary key
+      // Cache
+      databases: [], // List current conn. dbs
+      tables: [], // List current conn. tables
+      tables_columns: {}, // All tables fields
+      tables_primary_keys: {}, // All tables primary keys
+      // Column types
       common_column_types: [
         {
           name: 'INT',
@@ -415,7 +423,7 @@
       // Retrieve databases
       $vm.conn.query('SHOW DATABASES')
       .then(res => {
-        $vm.$parent.databases = res.map(row => row.Database)
+        $vm.databases = res.map(row => row.Database)
       })
       .catch(err => {
         $vm.$swal('Error', 'Error retrieving databases: ' + err.message, 'error')
@@ -423,7 +431,7 @@
 
       // Retrieve tables, if database selected
       if ($vm.conn.config.database !== null) {
-        $vm.tables()
+        $vm.getTables()
       }
     },
 
@@ -438,7 +446,7 @@
 
         $vm.conn.changeUser({database: db}, () => {
           $vm.$parent.db = db
-          $vm.tables()
+          $vm.getTables()
         })
       },
 
@@ -452,19 +460,21 @@
 
         $vm.table = table
         $vm.$parent.table = table
-        $vm.fields = []
+        $vm.columns = []
 
         // Retrieve from history
-        if ($vm.$parent.tables_fields.hasOwnProperty(table)) {
-          $vm.fields = $vm.$parent.tables_fields[table]
+        if ($vm.tables_columns.hasOwnProperty(table)) {
+          $vm.columns = $vm.tables_columns[table]
+          $vm.primary_key = $vm.tables_primary_keys[table]
+          $vm.$router.push('/connected')
           return
         }
 
         // Retrieve structure
-        $vm.$parent.connection.ref.query('DESCRIBE ' + table)
+        $vm.conn.query('DESCRIBE ' + table)
         .then(res => {
           // Parse fields
-          $vm.fields = res.map(f => {
+          $vm.columns = res.map(f => {
             let fUnsigned = false
             let fLen = null
 
@@ -485,6 +495,12 @@
               }
             }
 
+            // Check if primary key (used in Content)
+            if (f.Key === 'PRI') {
+              $vm.primary_key = f.Field
+              $vm.tables_primary_keys[table] = f.Field
+            }
+
             return {
               name: f.Field,
               type: fType.toUpperCase(),
@@ -498,7 +514,8 @@
           })
 
           // Cache fields
-          $vm.$parent.tables_fields[table] = $vm.fields
+          $vm.tables_columns[table] = $vm.columns
+          $vm.$router.push('/connected')
         })
         .catch(err => {
           $vm.$swal('Error', 'Error retrieving table info: ' + err.message, 'error')
@@ -508,12 +525,12 @@
       /**
        * Retrieve database tables
        */
-      tables () {
+      getTables () {
         let $vm = this
 
-        $vm.$parent.connection.ref.query('SHOW TABLES')
+        $vm.conn.query('SHOW TABLES')
         .then(res => {
-          $vm.$parent.tables = res.map(row => row['Tables_in_' + $vm.$parent.db])
+          $vm.tables = res.map(row => row['Tables_in_' + $vm.$parent.db])
         })
         .catch(err => {
           $vm.$swal('Error', 'Error retrieving tables: ' + err.message, 'error')

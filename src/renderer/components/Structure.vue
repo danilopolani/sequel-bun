@@ -17,7 +17,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="field in $parent.fields" :class="{'is-active': currentField == field.name}" @click="currentField = field.name">
+            <tr v-for="field in $parent.columns" :class="{'is-active': currentField == field.name}" @click="currentField = field.name">
               <td class="no-border-left has-input">
                 <input type="text" v-model="field.name" class="masked" :readonly="!editInput" @dblclick="editInput = true" @blur="editInput = false">
               </td>

@@ -12,13 +12,13 @@
             </tr>
           </thead>
           <tbody>
-            <!--<tr v-for="field in $parent.fields" :class="{'is-active': currentField == field.name}" @click="currentField = field.name">
-              <td class="no-border-left has-input">
-                <input type="text" v-model="field.name" class="masked" :readonly="!editInput" @dblclick="editInput = true" @blur="editInput = false">
+            <tr v-for="(row, ri) in rows" :class="{'is-active': currentRow == ri}" @click="currentRow = ri">
+              <td v-for="(column, ci) in columns" :class="['has-input', {'no-border-left': ci === 0}]">
+                <input type="text" class="masked" :value="row[column.name]" :readonly="!editInput" @dblclick="editInput = true" @blur="editInput = false">
               </td>
-            </tr>-->
+            </tr>
 
-            <!-- New column -->
+            <!-- New row -->
             <tr>
               <td class="has-input">
                 <input type="text" v-model="newColumn" class="masked" placeholder="New column name" />
@@ -46,7 +46,7 @@
             <i class="fa fa-plus"></i>
           </span>
         </a>
-        <a class="button" :disabled="currentField === null">
+        <a class="button" :disabled="currentRow === null">
           <span class="icon is-small">
             <i class="fa fa-minus"></i>
           </span>
@@ -75,16 +75,40 @@
       VuePerfectScrollbar
     },
     data: () => ({
-      columns: {},
+      columns: {}, // Table columns
       newColumn: null,
-      currentColumn: null,
+      currentRow: null,
       editInput: false,
+      conn: null, // Connection instance
+      table: null, // Current table
+      rows: [], // Query result
+      orderBy: {},
+      // Pagination
+      limit: 1000,
+      page: 1,
+      // Context menu
       ctxData: {}
     }),
 
     created () {
       let $vm = this
-      $vm.columns = $vm.$parent.$parent.tables_fields[$vm.$parent.table]
+      $vm.columns = $vm.$parent.tables_columns[$vm.$parent.table]
+      $vm.conn = $vm.$parent.$parent.connection.ref
+      $vm.table = $vm.$parent.table
+
+      // Build query
+      let query = 'SELECT * FROM `' + $vm.table + '`'
+      if ($vm.$parent.primary_key !== null) {
+        query += ' ORDER BY `' + $vm.$parent.primary_key + '` DESC'
+        $vm.orderBy[$vm.$parent.primary_key] = 'DESC'
+      }
+      query += ' LIMIT ' + $vm.limit
+
+      $vm.conn.query(query)
+      .then(res => $vm.rows = res)
+      .catch(err => {
+        $vm.$swal('Error', 'Error retrieving data from query <em><small>' + query + '</small></em>: ' + err.message, 'error')
+      })
     },
 
     methods: {

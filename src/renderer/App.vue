@@ -64,9 +64,6 @@
         },
         db: null, // Current db
         connections: [], // Saved connections
-        databases: [], // List current conn. dbs
-        tables: [], // List current conn. tables,
-        tables_fields: {}, // Tables fields
         table: null // Current table
       }
     },
@@ -111,7 +108,7 @@
           }
 
           // Redirect to /content
-          $vm.$router.push('connected')
+          $vm.$router.replace('connected')
         })
         .catch(err => $vm.$swal('Error', err, 'error'))
       }
