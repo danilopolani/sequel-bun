@@ -121,7 +121,7 @@
   @import "~font-awesome/scss/font-awesome";
 
   html {
-    overflow-y: hidden;
+    overflow: hidden !important;
   }
 
   html,

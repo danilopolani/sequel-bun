@@ -17,7 +17,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="field in $parent.columns" :class="{'is-active': currentField == field.name}" @click="currentField = field.name">
+            <tr v-for="field in $parent.columns"
+              :class="{'is-active': currentField == field.name}"
+              @click="currentField = field.name"
+              :key="field.name">
               <td class="no-border-left has-input">
                 <input type="text" v-model="field.name" class="masked" :readonly="!editInput" @dblclick="editInput = true" @blur="editInput = false">
               </td>
@@ -25,12 +28,12 @@
                 <div class="select">
                   <select v-model="field.type">
                     <!-- Common types -->
-                    <option v-for="commonType in $parent.common_column_types" :value="commonType.name">
+                    <option v-for="commonType in $parent.common_column_types" :value="commonType.name" :key="commonType.name">
                       {{ commonType.name }}
                     </option>
                     <!-- All grouped -->
-                    <optgroup v-for="typeGroup in $parent.column_types" :label="typeGroup.name">
-                      <option v-for="typeGroupType in typeGroup.children" :value="typeGroupType.name" :disabled="typeGroupType.name == '-'">
+                    <optgroup v-for="typeGroup in $parent.column_types" :label="typeGroup.name" :key="typeGroup.name">
+                      <option v-for="typeGroupType in typeGroup.children" :value="typeGroupType.name" :disabled="typeGroupType.name == '-'" :key="typeGroupType.name">
                         {{ typeGroupType.name }}
                       </option>
                     </optgroup>

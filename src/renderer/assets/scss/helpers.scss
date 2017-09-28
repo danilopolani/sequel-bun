@@ -51,10 +51,12 @@
   position: relative;
 }
 
-// Other
-.is-invisible {
-  visibility: hidden;
+// Dimensions
+th.width-80,
+td.width-80 {
+  max-width: 80px;
 }
+
 .is-fullheight {
   height: 100%;
 }
@@ -73,6 +75,11 @@
   padding-top: 15px;
   padding-bottom: 15px;
   position: relative;
+}
+
+// Other
+.is-invisible {
+  visibility: hidden;
 }
 .pointer {
   cursor: pointer;

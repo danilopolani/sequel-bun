@@ -66,8 +66,6 @@
 </template>
 
 <script>
-  // import _ from 'lodash'
-
   export default {
     name: 'connected',
     data: () => ({
@@ -578,7 +576,7 @@ main {
       border-bottom: 1px solid #d6d6d6 !important;
       position: relative;
 
-      &::before {
+      &:not(:first-child)::before {
         position: absolute;
         width: 1px;
         height: 60%;
@@ -593,6 +591,11 @@ main {
       background: $primary !important;
       * {
         color: #fff !important;
+      }
+
+      option,
+      optgroup {
+        color: #363636 !important;
       }
 
       .select::after {
@@ -645,6 +648,17 @@ main {
           box-shadow: none;
         }
       }
+    }
+  }
+
+  .table.is-narrow td {
+    height: 30px;
+
+    input,
+    .select,
+    .select select {
+      max-width: 100%;
+      height: 100%;
     }
   }
 }
