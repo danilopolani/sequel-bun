@@ -74,11 +74,13 @@
       table: null, // Current table
       columns: [], // Current table columns
       primary_key: null, // Current table primary key
+      foreign_keys: {},
       // Cache
       databases: [], // List current conn. dbs
       tables: [], // List current conn. tables
-      tables_columns: {}, // All tables fields
-      tables_primary_keys: {}, // All tables primary keys
+      tables_columns: {}, // All tables columns
+      tables_primary_keys: {},
+      tables_foreign_keys: {},
       // Column types
       common_column_types: [
         {
@@ -460,7 +462,7 @@
       /**
        * Show table structure
        *
-       * @param {string} db
+       * @param {string} table
        */
       structure (table) {
         let $vm = this
@@ -473,11 +475,12 @@
         if ($vm.tables_columns.hasOwnProperty(table)) {
           $vm.columns = $vm.tables_columns[table]
           $vm.primary_key = $vm.tables_primary_keys[table]
+          $vm.foreign_keys = $vm.tables_foreign_keys[table]
           $vm.$router.push('/connected')
           return
         }
 
-        // Retrieve structure
+        // Otherwise, retrieve structure
         $vm.conn.query('DESCRIBE ' + table)
         .then(res => {
           // Parse fields
@@ -522,11 +525,15 @@
 
           // Cache fields
           $vm.tables_columns[table] = $vm.columns
-          $vm.$router.push('/connected')
+
+          $vm.foreignKeys($vm.$parent.db, table)
+          .then(res => {
+            console.log(res)
+            $vm.$router.push('/connected')
+          })
+          .catch(err => $vm.$swal('Error', 'Error retrieving table info: ' + err.message, 'error'))
         })
-        .catch(err => {
-          $vm.$swal('Error', 'Error retrieving table info: ' + err.message, 'error')
-        })
+        .catch(err => $vm.$swal('Error', 'Error retrieving table info: ' + err.message, 'error'))
       },
 
       /**
@@ -542,6 +549,28 @@
         .catch(err => {
           $vm.$swal('Error', 'Error retrieving tables: ' + err.message, 'error')
         })
+      },
+
+      /**
+       * Retrieve all foreign keys
+       *
+       * @param {string} db
+       * @param {string} table
+       *
+       * @return {Promise}
+       */
+      foreignKeys (db, table) {
+        return this.conn.query(`select
+            concat(table_name, '.', column_name) as 'foreign key',  
+            concat(referenced_table_name, '.', referenced_column_name) as 'references'
+        from
+            information_schema.key_column_usage
+        where
+          table_schema = 'meritocracy'
+        and
+          table_name = 'attachment'
+        and
+            referenced_table_name is not null`)
       },
 
       /**
