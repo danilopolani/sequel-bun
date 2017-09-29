@@ -9,7 +9,9 @@
         <div class="column is-2"><!-- Field -->
           <div class="select is-fullwidth">
             <select v-model="search.column">
-              <option value="id">id</option>
+              <option v-for="column in columns" :key="column.name">
+                {{ column.name }}
+              </option>
             </select>
           </div>
         </div>
@@ -143,6 +145,7 @@
     created () {
       let $vm = this
       $vm.columns = $vm.$parent.tables_columns[$vm.$parent.table]
+      $vm.search.column = $vm.columns[0].name
       $vm.conn = $vm.$parent.$parent.connection.ref
       $vm.table = $vm.$parent.table
 
