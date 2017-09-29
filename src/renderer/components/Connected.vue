@@ -554,6 +554,10 @@ main {
 
   .main-table {
     height: 60%;
+
+    &.full {
+      height: calc(100% - 100px);
+    }
   }
 
   .secondary-table {

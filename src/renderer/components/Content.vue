@@ -1,7 +1,49 @@
 <template>
   <div class="is-fullheight">
+    <!-- Search -->
+    <div id="content-search-bar">
+      <div class="columns">
+        <div class="column is-1 has-text-right">
+          Search:
+        </div>
+        <div class="column is-2"><!-- Field -->
+          <div class="select is-fullwidth">
+            <select v-model="search.column">
+              <option value="id">id</option>
+            </select>
+          </div>
+        </div>
+        <div class="column is-2"><!-- Operator -->
+          <div class="select is-fullwidth">
+            <select v-model="search.operator">
+              <option value="=">=</option>
+              <option value="<>">&ne;</option>
+              <option value=">">&gt;</option>
+              <option value="<">&lt;</option>
+              <option value=">=">&ge;</option>
+              <option value="<=">&le;</option>
+              <option value="IN">IN</option>
+              <option value="LIKE">LIKE</option>
+              <option value="BETWEEN">BETWEEN</option>
+              <option value="IS NULL">IS NULL</option>
+              <option value="IS NOT NULL">IS NOT NULL</option>
+            </select>
+          </div>
+        </div>
+        <div class="column is-6"><!-- Input -->
+          <input type="text" class="input is-fullwidth has-text-center" placeholder="Search" v-model="search.text">
+        </div>
+        <div class="column is-1">
+          <button class="button is-info action osx active is-fullwidth" :disabled="querying" @click="search()">
+            Filter
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Table content -->
-    <div class="main-table">
+    <div class="main-table full">
+      <!-- Table -->
       <VuePerfectScrollbar class="scrollable with-action-bar">
         <table class="table is-striped is-narrow is-fullwidth">
           <thead>
@@ -61,11 +103,6 @@
         </a>
       </div><!-- /action bar -->
     </div><!-- /main table -->
-    <div class="secondary-table">
-      <div class="scrollable with-action-bar">
-        Foo
-      </div><!-- /scrollable -->
-    </div><!-- /main table -->
   </div>
 </template>
 
@@ -82,6 +119,7 @@
       columns: {}, // Table columns
       newColumn: null,
       currentRow: null,
+      querying: false, // Is running query
       editInput: false,
       oldValue: null, // Old value when editing input
       updateCanceled: false, // When pressing "ESC" to cancel updates, this will be true to disable query
@@ -89,8 +127,14 @@
       table: null, // Current table
       rows: [], // Query result
       orderBy: {},
+      // Search bar
+      search: {
+        column: null,
+        operator: '=',
+        text: ''
+      },
       // Pagination
-      limit: 1000,
+      limit: 500,
       page: 1,
       // Context menu
       ctxData: {}
@@ -175,5 +219,29 @@
 <style lang="scss">
 table {
   overflow-x: auto;
+}
+
+#content-search-bar {
+  background: #ececec;
+  border-bottom: 1px solid #d6d6d6;
+  padding: 7px 15px 5px 15px;
+
+  .columns {
+    margin: 0;
+
+    .column {
+      padding-top: 0;
+      padding-bottom: 0;
+      padding-left: 0;
+
+      &:first-child {
+        line-height: 32px;
+      }
+
+      &:last-child {
+        padding-right: 0;
+      }
+    }
+  }
 }
 </style>

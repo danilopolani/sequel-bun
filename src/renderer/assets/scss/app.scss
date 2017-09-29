@@ -134,6 +134,13 @@ input.masked {
 .select select {
   border-radius: 5px;
 }
+.input input:not([type="radio"]):not([type="checkbox"]) {
+  border: none;
+
+  &:focus {
+    outline: none;
+  }
+}
 
 // Buttons
 .button {
