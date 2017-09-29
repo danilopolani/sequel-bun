@@ -38,7 +38,7 @@
           <!-- Change database -->
           <p class="menu-label has-text-weight-bold">Databases</p>
           <div class="select">
-            <select v-model="$parent.db">
+            <select v-model="$parent.db" @change="use($parent.db)">
               <option value="-1" disabled>Choose database</option>
               <option v-for="db in databases" :value="db">{{ db }}</option>
             </select>
@@ -445,6 +445,15 @@
         $vm.conn.changeUser({database: db}, () => {
           $vm.$parent.db = db
           $vm.getTables()
+
+          // Clear cache
+          $vm.table = null
+          $vm.columns = {}
+          $vm.primary_key = null
+          $vm.tables_primary_keys = {}
+          $vm.tables_columns = {}
+
+          $vm.$router.replace('/connected')
         })
       },
 

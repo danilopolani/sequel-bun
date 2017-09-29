@@ -33,10 +33,15 @@
           </div>
         </div>
         <div class="column is-6"><!-- Input -->
-          <input type="text" class="input is-fullwidth has-text-center" placeholder="Search" v-model="search.text">
+          <input type="text" class="input is-fullwidth has-text-center" placeholder="Search"
+            v-model="search.text"
+            :disabled="search.operator.indexOf('NULL') > -1"
+            @keyup.enter="search.text.trim().length === 0 ? '' : doSearch()">
         </div>
         <div class="column is-1">
-          <button class="button is-info action osx active is-fullwidth" :disabled="querying" @click="search()">
+          <button class="button is-info action osx active is-fullwidth"
+            :disabled="querying || (search.text.trim().length === 0 && search.operator.indexOf('NULL') === -1)"
+            @click="doSearch()">
             Filter
           </button>
         </div>
@@ -62,7 +67,7 @@
               @click="$parent.primary_key !== null ? currentRow = ri : ''"
               :key="ri">
               <td v-for="(column, ci) in columns"
-                :class="['has-input', columnClass(column.name), {'no-border-left': ci === 0, 'no-border-right': ci == columns.length - 1}]"
+                :class="['has-input', columnClass(column.name), {'no-border-left': ci === 0, 'no-border-right': ci == columns.length - 1, 'is-null': row[column.name] === null && !editInput}]"
                 :key="ci">
                 <input type="text" class="masked"
                   v-model="row[column.name]"
@@ -192,9 +197,32 @@
 
         const query = `UPDATE \`${$vm.table}\` SET \`${col}\` = '${val}' WHERE \`${$vm.$parent.primary_key}\` = '${key}'`
         $vm.conn.query(query)
-        .catch(err => {
-          $vm.$swal('Error', 'Error executing query <code>' + query + '</code>: <small>' + err.message + '</small>', 'error')
-        })
+        .catch(err => $vm.$swal('Error', 'Error executing query <code>' + query + '</code>: <small>' + err.message + '</small>', 'error'))
+      },
+
+      /**
+       * Execute a search
+       */
+      doSearch () {
+        let $vm = this
+
+        // Build query
+        let query = `SELECT * FROM \`${$vm.table}\` WHERE \`${$vm.search.column}\` `
+        if ($vm.search.operator.indexOf('NULL') > -1) {
+          query += $vm.search.operator
+        } else if ($vm.search.operator === 'BETWEEN') {
+          // To do
+        } else {
+          query += $vm.search.operator + ` '${$vm.search.text}'`
+        }
+        if ($vm.$parent.primary_key !== null) {
+          query += ` ORDER BY \`${$vm.$parent.primary_key}\` DESC`
+        }
+        query += ' LIMIT ' + $vm.limit
+
+        $vm.conn.query(query)
+        .then(rows => $vm.rows = rows)
+        .catch(err => $vm.$swal('Error', 'Error executing query <code>' + query + '</code>: <small>' + err.message + '</small>', 'error'))
       },
 
       /**
@@ -245,6 +273,26 @@ table {
         padding-right: 0;
       }
     }
+  }
+}
+
+.is-null {
+  position: relative;
+
+    &::after {
+    content: 'NULL';
+    position: absolute;
+    left: 50%;
+    top: 5px;
+    background: rgba(0, 0, 0, .4);
+    width: auto;
+    height: auto;
+    color: #fff;
+    text-align: center;
+    font-size: 10px;
+    margin: auto;
+    margin-left: -20px;
+    padding: 1px 5px;
   }
 }
 </style>
