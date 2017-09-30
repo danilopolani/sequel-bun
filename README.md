@@ -35,6 +35,8 @@ yarn run lint
 - [ ] Edit table engine and collation
 - [ ] Manage users
 - [ ] Multiple tabs
+- [ ] Multi sort columns
+- [ ] Custom label color
 
 ---
 

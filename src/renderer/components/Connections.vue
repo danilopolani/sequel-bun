@@ -67,7 +67,7 @@
                     <div class="column has-text-centered">
                       <i class="fa fa-times vertical-middle pointer" @click="connection.color = null"></i>
                     </div>
-                    <div class="column has-text-centered" v-for="c in ['turquoise', 'info', 'success', 'warning', 'danger']">
+                    <div class="column has-text-centered" v-for="c in ['turquoise', 'info', 'success', 'warning', 'danger']" :key="c">
                       <div class="color button" :class="['is-' + c, {'active': c == connection.color}]" @click="connection.color = c"></div>
                     </div>
                   </div>

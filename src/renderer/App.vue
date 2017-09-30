@@ -5,7 +5,7 @@
         <div class="hero-body">
           <div class="is-block-centered">
             <div class="loader is-block-centered"></div>
-            <h3 class="is-block-centered">{{ loading_text }}</h3>
+            <h3 class="is-block-centered">{{ loadingText }}</h3>
           </div>
         </div>
       </div>
@@ -16,7 +16,7 @@
         <div class="select">
           <select v-model="connection.i">
             <option value="-1" disabled>Choose connection</option>
-            <option v-for="(conn, i) in connections" :value="i">{{ conn.name }}</option>
+            <option v-for="(conn, i) in connections" :value="i" :key="i">{{ conn.name }}</option>
           </select>
         </div>
       </div>
@@ -49,8 +49,6 @@
 </template>
 
 <script>
-  // import _ from 'lodash'
-  // import * as moment from 'moment'
   import Connection from './services/Connection'
 
   export default {
@@ -58,6 +56,7 @@
     data () {
       return {
         loading: false,
+        loadingText: '',
         connection: { // Current connection
           i: -1,
           ref: null
@@ -117,9 +116,6 @@
 </script>
 
 <style lang="scss">
-  $fa-font-path: "~font-awesome/fonts";
-  @import "~font-awesome/scss/font-awesome";
-
   html {
     overflow: hidden !important;
   }

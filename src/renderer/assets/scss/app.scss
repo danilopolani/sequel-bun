@@ -1,6 +1,9 @@
 @import 'variables';
 @import 'helpers';
 
+$fa-font-path: '~font-awesome/fonts';
+@import '~font-awesome/scss/font-awesome';
+
 // General
 html {
   font-size: 14px;
@@ -13,6 +16,15 @@ aside.menu {
   
   .menu-label {
     color: #586270;
+
+    span.truncate {
+      display: inline-block;
+      overflow: hidden;
+      max-width: calc(100% - 65px);
+      line-height: 8px;
+      white-space: normal;
+      text-overflow: ellipsis;
+    }  
   }
 
   .menu-list {
@@ -21,7 +33,7 @@ aside.menu {
 
     &.overflow {
       overflow-x: auto;
-      max-height: calc(100% - 100px);
+      max-height: calc(100% - 170px);
     }
 
     li a {
@@ -29,6 +41,9 @@ aside.menu {
       padding-right: 1.5rem;
       border-radius: 0;
       font-size: 0.95rem;
+      overflow: hidden;
+      white-space: normal;
+      text-overflow: ellipsis;
 
       &.is-active,
       &:hover {

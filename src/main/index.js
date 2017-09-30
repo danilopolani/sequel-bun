@@ -32,7 +32,7 @@ function createWindow () {
     mainWindow = null
   })
 }
-
+app.commandLine.appendSwitch('js-flags', '--max-old-space-size=4096')
 app.on('ready', createWindow)
 
 app.on('window-all-closed', () => {

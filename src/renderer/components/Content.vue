@@ -9,7 +9,7 @@
         <div class="column is-2"><!-- Field -->
           <div class="select is-fullwidth">
             <select v-model="search.column">
-              <option v-for="column in columns" :key="column.name">
+              <option v-for="column in $parent.columns" :key="column.name">
                 {{ column.name }}
               </option>
             </select>
@@ -55,7 +55,7 @@
         <table class="table is-striped is-narrow is-fullwidth">
           <thead>
             <tr>
-              <th v-for="(column, i) in columns"
+              <th v-for="(column, i) in $parent.columns"
                 :class="[columnClass(column.name), {'no-border-left': i == 0, 'no-border-right': i == columns.length - 1}]" :key="i">
                 {{ column.name }}
               </th>
@@ -64,11 +64,17 @@
           <tbody>
             <tr v-for="(row, ri) in rows"
               :class="{'is-active': currentRow == ri}"
-              @click="$parent.primary_key !== null ? currentRow = ri : ''"
+              @click="activeRow(ri, $event)"
               :key="ri">
-              <td v-for="(column, ci) in columns"
-                :class="['has-input', columnClass(column.name), {'no-border-left': ci === 0, 'no-border-right': ci == columns.length - 1, 'is-null': row[column.name] === null && !editInput}]"
+              <td v-for="(column, ci) in $parent.columns"
+                :class="['has-input', columnClass(column.name), {
+                  'no-border-left': ci === 0,
+                  'no-border-right': ci == columns.length - 1,
+                  'is-null': row[column.name] === null && !editInput,
+                  'has-icon': (foreignKey(column.name) && row[column.name]) || isURL(row[column.name])
+                }]"
                 :key="ci">
+
                 <input type="text" class="masked"
                   v-model="row[column.name]"
                   :readonly="!editInput"
@@ -78,6 +84,11 @@
                   @change="$parent.primary_key !== null ? save(row[$parent.primary_key], column.name, row[column.name]) : ''"
                   @keyup.enter="$event.target.blur()"
                   @keyup.esc="restore(ri, column.name, $event)">
+
+                  <!-- Foreign key -->
+                  <i class="fa fa-arrow-circle-right" v-if="foreignKey(column.name) && row[column.name]" @click="toForeign(column.name, row[column.name])"></i>
+                  <!-- URL -->
+                  <i class="fa fa-external-link" v-if="isURL(row[column.name]) && !foreignKey(column.name)"></i>
               </td>
             </tr>
 
@@ -141,7 +152,7 @@
         text: ''
       },
       // Pagination
-      limit: 500,
+      limit: 50,
       page: 1,
       // Context menu
       ctxData: {}
@@ -170,6 +181,18 @@
     },
 
     methods: {
+      /**
+       * Set active row
+       *
+       * @param {int} i
+       * @param {object} e
+       */
+      activeRow (i, e) {
+        if (this.$parent.primary_key !== null && e.target.className.indexOf('fa-') === -1) {
+          this.currentRow = i
+        }
+      },
+
       /** Restore the previous value
        *
        * @param {int} row - The row index
@@ -223,6 +246,55 @@
         $vm.conn.query(query)
         .then(rows => $vm.rows = rows)
         .catch(err => $vm.$swal('Error', 'Error executing query <code>' + query + '</code>: <small>' + err.message + '</small>', 'error'))
+      },
+
+      /**
+       * Go to another table through a foreign key
+       *
+       * @param {string} key
+       * @param {string} val
+       */
+      async toForeign (key, val) {
+        let $vm = this
+
+        const { table, col } = $vm.$parent.foreign_keys[key]
+        // Retrieve structure
+        await $vm.$parent.structure(table, false)
+
+        const q = `SELECT * FROM \`${table}\` WHERE \`${col}\` = '${val}'`
+        $vm.conn.query(q)
+        .then(res => {
+          $vm.rows = res
+          // Reset current row
+          $vm.currentRow = null
+          // $vm.$parent.$router.push('/connected/content')
+        })
+        .catch(err => $vm.$swal('Error', 'Error executing query <code>' + q + '</code>: <small>' + err.message + '</small>', 'error'))
+      },
+
+      /**
+       * Return the foreign key of a column or false
+       *
+       * @param {string} col
+       * @return {any}
+       */
+      foreignKey (col) {
+        if (this.$parent.foreign_keys.hasOwnProperty(col)) {
+          return this.$parent.foreign_keys[col]
+        }
+
+        return false
+      },
+
+      /**
+       * Check if a string is a URL
+       *
+       * @param {string} str
+       * @return {bool}
+       */
+      isURL (str) {
+        const regex = /^\s*data:([a-z]+\/[a-z]+(;[a-z\-]+\=[a-z\-]+)?)?(;base64)?,[a-z0-9\!\$\&\'\,\(\)\*\+\,\;\=\-\.\_\~\:\@\/\?\%\s]*\s*$/i
+        return regex.test(str)
       },
 
       /**

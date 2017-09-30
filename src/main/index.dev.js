@@ -14,7 +14,9 @@ process.env.NODE_ENV = 'development'
 require('electron-debug')({ showDevTools: true })
 
 // Install `vue-devtools`
-require('electron').app.on('ready', () => {
+let app = require('electron').app
+app.commandLine.appendSwitch('js-flags', '--max-old-space-size=4096')
+app.on('ready', () => {
   let installExtension = require('electron-devtools-installer')
   installExtension.default(installExtension.VUEJS_DEVTOOLS)
     .then(() => {})

@@ -17,11 +17,14 @@ module.exports = {
   ],
   'rules': {
     // allow paren-less arrow functions
-    'arrow-parens': 0,
+    'arrow-parens': 'off',
     // allow async-await
-    'generator-star-spacing': 0,
-    'no-return-assign': 0,
+    'generator-star-spacing': 'off',
+    // allow arrow functions to assign a value as return
+    'no-return-assign': 'off',
+    // allow useless escapes regex
+    'no-useless-escape': 'off',
     // allow debugger during development
-    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   }
 }

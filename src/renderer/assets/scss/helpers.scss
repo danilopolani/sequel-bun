@@ -41,7 +41,10 @@
   vertical-align: middle;
 }
 
-// Colors
+// Text
+.weight-500 {
+  font-weight: 500;
+}
 .is-turquoise {
   background: $turquoise;
 }
@@ -55,6 +58,13 @@
 th.width-80,
 td.width-80 {
   max-width: 80px;
+  overflow: hidden;
+  white-space: normal;
+  text-overflow: ellipsis;
+
+  &.has-icon {
+    max-width: 110px;
+  }
 }
 
 .is-fullheight {

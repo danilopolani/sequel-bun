@@ -24,7 +24,7 @@
         <div v-if="$parent.db === null" class="is-fullheight">
           <p class="menu-label has-text-weight-bold">Databases</p>
           <ul class="menu-list overflow" v-if="databases.length > 0">
-            <li v-for="db in databases" @contextmenu.prevent="$refs.ctxMenu.open($event, {db: db})">
+            <li v-for="db in databases" @contextmenu.prevent="$refs.ctxMenu.open($event, {db: db})" :key="db">
               <a @click="use(db)">
                 <img src="static/database-small.png" :alt="'Database ' + db" />
                 {{ db }}
@@ -40,14 +40,18 @@
           <div class="select">
             <select v-model="$parent.db" @change="use($parent.db)">
               <option value="-1" disabled>Choose database</option>
-              <option v-for="db in databases" :value="db">{{ db }}</option>
+              <option v-for="db in databases" :value="db" :key="db">{{ db }}</option>
             </select>
           </div>
 
           <!-- Tables list -->
-          <p class="menu-label has-text-weight-bold">Tables</p>
+          <p class="menu-label has-text-weight-bold">
+            Tables
+            <span v-if="table">-</span>
+            <span v-if="table" class="weight-500 truncate">{{ table }}</span>
+          </p>
             <ul class="menu-list overflow" v-if="tables.length > 0">
-              <li v-for="t in tables" @contextmenu.prevent="$refs.ctxMenu.open($event, {table: t})">
+              <li v-for="t in tables" @contextmenu.prevent="$refs.ctxMenu.open($event, {table: t})" :key="t">
                 <a @click="structure(t)" :class="{'is-active': t == table}">
                   <img src="static/table-small.png" :alt="'Table ' + t" />
                   {{ t }}
@@ -70,10 +74,11 @@
     name: 'connected',
     data: () => ({
       ctxData: {},
-      conn: null,
-      table: null, // Current table
-      columns: [], // Current table columns
-      primary_key: null, // Current table primary key
+      conn: null, // Connection instance
+      // Current table
+      table: null,
+      columns: [],
+      primary_key: null,
       foreign_keys: {},
       // Cache
       databases: [], // List current conn. dbs
@@ -448,12 +453,35 @@
           $vm.$parent.db = db
           $vm.getTables()
 
-          // Clear cache
+          // Clear cache current table
           $vm.table = null
+          $vm.$parent.table = null
           $vm.columns = {}
           $vm.primary_key = null
+          $vm.foreign_keys = {}
+          // Clear all db cache
           $vm.tables_primary_keys = {}
+          $vm.tables_foreign_keys = {}
           $vm.tables_columns = {}
+
+          $vm.foreignKeys(db)
+          .then(res => {
+            for (let fk of res) {
+              let { 0: fromTable, 1: fromCol } = fk.foreign_key.split('.')
+              let { 0: toTable, 1: toCol } = fk.references.split('.')
+
+              // Create empty array if doesn't exists
+              if (!$vm.tables_foreign_keys.hasOwnProperty(fromTable)) {
+                $vm.tables_foreign_keys[fromTable] = {}
+              }
+
+              $vm.tables_foreign_keys[fromTable][fromCol] = {
+                table: toTable,
+                col: toCol
+              }
+            }
+          })
+          .catch(err => $vm.$swal('Error', 'Error retrieving foreign keys: ' + err.message, 'error'))
 
           $vm.$router.replace('/connected')
         })
@@ -463,20 +491,24 @@
        * Show table structure
        *
        * @param {string} table
+       * @param {bool} redirect
        */
-      structure (table) {
+      structure (table, redirect = true) {
         let $vm = this
 
         $vm.table = table
         $vm.$parent.table = table
         $vm.columns = []
 
+        $vm.foreign_keys = $vm.tables_foreign_keys[table] || {}
+
         // Retrieve from history
         if ($vm.tables_columns.hasOwnProperty(table)) {
           $vm.columns = $vm.tables_columns[table]
           $vm.primary_key = $vm.tables_primary_keys[table]
-          $vm.foreign_keys = $vm.tables_foreign_keys[table]
-          $vm.$router.push('/connected')
+          if (redirect) {
+            $vm.$router.push('/connected')
+          }
           return
         }
 
@@ -526,12 +558,9 @@
           // Cache fields
           $vm.tables_columns[table] = $vm.columns
 
-          $vm.foreignKeys($vm.$parent.db, table)
-          .then(res => {
-            console.log(res)
+          if (redirect) {
             $vm.$router.push('/connected')
-          })
-          .catch(err => $vm.$swal('Error', 'Error retrieving table info: ' + err.message, 'error'))
+          }
         })
         .catch(err => $vm.$swal('Error', 'Error retrieving table info: ' + err.message, 'error'))
       },
@@ -555,20 +584,17 @@
        * Retrieve all foreign keys
        *
        * @param {string} db
-       * @param {string} table
        *
        * @return {Promise}
        */
-      foreignKeys (db, table) {
+      foreignKeys (db) {
         return this.conn.query(`select
-            concat(table_name, '.', column_name) as 'foreign key',  
+            concat(table_name, '.', column_name) as 'foreign_key',  
             concat(referenced_table_name, '.', referenced_column_name) as 'references'
         from
             information_schema.key_column_usage
         where
-          table_schema = 'meritocracy'
-        and
-          table_name = 'attachment'
+          table_schema = '${db}'
         and
             referenced_table_name is not null`)
       },
@@ -701,6 +727,21 @@ main {
     .select select {
       max-width: 100%;
       height: 100%;
+    }
+
+    &.has-icon {
+      input,
+      .select {
+        max-width: calc(100% - 20px);
+        display: inline-block;
+      }
+
+      i.fa {
+        font-size: 14px;
+        opacity: .5;
+        margin-left: 3px;
+        cursor: pointer;
+      }
     }
   }
 }
