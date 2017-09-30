@@ -20,6 +20,7 @@
 
     <div class="columns is-fullheight">
       <aside class="column is-one-quarter menu padding-left">
+
         <!-- Show databases if not selected -->
         <div v-if="$parent.db === null" class="is-fullheight">
           <p class="menu-label has-text-weight-bold">Databases</p>
@@ -27,12 +28,13 @@
             <li v-for="db in databases" @contextmenu.prevent="$refs.ctxMenu.open($event, {db: db})" :key="db">
               <a @click="use(db)">
                 <img src="static/database-small.png" :alt="'Database ' + db" />
-                {{ db }}
+                <span>{{ db }}</span>
               </a>
             </li>
           </ul>
           <small class="has-text-grey" v-else>No database found.</small>
         </div>
+
         <!-- Otherwise, show tables -->
         <div class="is-fullheight" v-else>
           <!-- Change database -->
@@ -54,7 +56,7 @@
               <li v-for="t in tables" @contextmenu.prevent="$refs.ctxMenu.open($event, {table: t})" :key="t">
                 <a @click="structure(t)" :class="{'is-active': t == table}">
                   <img src="static/table-small.png" :alt="'Table ' + t" />
-                  {{ t }}
+                  <span>{{ t }}</span>
                 </a>
               </li>
             </ul>

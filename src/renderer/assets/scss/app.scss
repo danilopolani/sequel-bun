@@ -41,9 +41,14 @@ aside.menu {
       padding-right: 1.5rem;
       border-radius: 0;
       font-size: 0.95rem;
-      overflow: hidden;
-      white-space: normal;
-      text-overflow: ellipsis;
+      
+      span {
+        max-width: calc(100% - 25px);
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 12px;
+      }
 
       &.is-active,
       &:hover {
