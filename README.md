@@ -36,6 +36,7 @@ yarn run lint
 - [ ] Manage users
 - [ ] Multiple tabs
 - [ ] Multi sort columns
+- [ ] History navigation
 - [ ] Custom label color
 
 ---

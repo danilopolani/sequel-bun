@@ -723,6 +723,7 @@ main {
 
   .table.is-narrow td {
     height: 30px;
+    position: relative;
 
     input,
     .select,
@@ -734,15 +735,16 @@ main {
     &.has-icon {
       input,
       .select {
-        max-width: calc(100% - 20px);
+        max-width: calc(100% - 40px);
         display: inline-block;
       }
 
       i.fa {
         font-size: 14px;
         opacity: .5;
-        margin-left: 3px;
+        float: right;
         cursor: pointer;
+        margin-top: 6px;
       }
     }
   }

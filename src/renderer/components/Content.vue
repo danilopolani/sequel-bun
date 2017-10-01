@@ -57,7 +57,7 @@
             <tr>
               <th v-for="(column, i) in $parent.columns"
                 :class="[columnClass(column.name), {'no-border-left': i == 0, 'no-border-right': i == columns.length - 1}]" :key="i">
-                {{ column.name }}
+                <span>{{ column.name }}</span>
               </th>
             </tr>
           </thead>
@@ -88,7 +88,7 @@
                   <!-- Foreign key -->
                   <i class="fa fa-arrow-circle-right" v-if="foreignKey(column.name) && row[column.name]" @click="toForeign(column.name, row[column.name])"></i>
                   <!-- URL -->
-                  <i class="fa fa-external-link" v-if="isURL(row[column.name]) && !foreignKey(column.name)"></i>
+                  <i class="fa fa-external-link" v-if="isURL(row[column.name]) && !foreignKey(column.name)" @click="openURL(row[column.name])"></i>
               </td>
             </tr>
 
@@ -127,6 +127,7 @@
 <script>
   import _ from 'lodash'
   import VuePerfectScrollbar from 'vue-perfect-scrollbar'
+  import { shell } from 'electron'
 
   export default {
     name: 'structure',
@@ -267,7 +268,6 @@
           $vm.rows = res
           // Reset current row
           $vm.currentRow = null
-          // $vm.$parent.$router.push('/connected/content')
         })
         .catch(err => $vm.$swal('Error', 'Error executing query <code>' + q + '</code>: <small>' + err.message + '</small>', 'error'))
       },
@@ -293,8 +293,17 @@
        * @return {bool}
        */
       isURL (str) {
-        const regex = /^\s*data:([a-z]+\/[a-z]+(;[a-z\-]+\=[a-z\-]+)?)?(;base64)?,[a-z0-9\!\$\&\'\,\(\)\*\+\,\;\=\-\.\_\~\:\@\/\?\%\s]*\s*$/i
+        const regex = /^(?:(?:https?):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/i
         return regex.test(str)
+      },
+
+      /**
+       * Open URL in the browser
+       *
+       * @param {string} str
+       */
+      openURL (url) {
+        shell.openExternal(url)
       },
 
       /**
