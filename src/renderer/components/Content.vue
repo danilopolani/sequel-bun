@@ -75,8 +75,10 @@
                 }]"
                 :key="ci">
 
+                <!-- All data except enum / set -->
                 <input type="text" class="masked"
                   v-model="row[column.name]"
+                  v-if="column.type != 'ENUM' && column.type != 'SET'"
                   :readonly="!editInput"
                   @dblclick="editInput = true"
                   @blur="editInput = false"
@@ -85,10 +87,27 @@
                   @keyup.enter="$event.target.blur()"
                   @keyup.esc="restore(ri, column.name, $event)">
 
-                  <!-- Foreign key -->
-                  <i class="fa fa-arrow-circle-right" v-if="foreignKey(column.name) && row[column.name]" @click="toForeign(column.name, row[column.name])"></i>
-                  <!-- URL -->
-                  <i class="fa fa-external-link" v-if="isURL(row[column.name]) && !foreignKey(column.name)" @click="openURL(row[column.name])"></i>
+                <!-- Enum / Set -->
+                <div class="select" v-if="column.type === 'ENUM' || column.type === 'SET'">
+                  <select class="masked"
+                    v-model="row[column.name]"
+                    :readonly="!editInput"
+                    @dblclick="editInput = true"
+                    @blur="editInput = false"
+                    @focus="oldValue = row[column.name]"
+                    @change="$parent.primary_key !== null ? save(row[$parent.primary_key], column.name, row[column.name]) : ''"
+                    @keyup.enter="$event.target.blur()"
+                    @keyup.esc="restore(ri, column.name, $event)">
+                    <option v-for="(opt, oi) in enumSet(column.len)" :key="oi">
+                      {{ opt }}
+                    </option>
+                  </select>
+                </div>
+
+                <!-- Foreign key -->
+                <i class="fa fa-arrow-circle-right" v-if="foreignKey(column.name) && row[column.name]" @click="toForeign(column.name, row[column.name])"></i>
+                <!-- URL -->
+                <i class="fa fa-external-link" v-if="isURL(row[column.name]) && !foreignKey(column.name)" @click="openURL(row[column.name])"></i>
               </td>
             </tr>
 
@@ -270,6 +289,16 @@
           $vm.currentRow = null
         })
         .catch(err => $vm.$swal('Error', 'Error executing query <code>' + q + '</code>: <small>' + err.message + '</small>', 'error'))
+      },
+
+      /**
+       * Retrieve enum / set value as array
+       *
+       * @param {string} val
+       * @return {array}
+      */
+      enumSet (val) {
+        return val.replace(/'/g, '').replace(/"/g, '').split(',')
       },
 
       /**
