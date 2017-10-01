@@ -742,9 +742,10 @@ main {
       i.fa {
         font-size: 14px;
         opacity: .5;
-        float: right;
+        position: absolute;
         cursor: pointer;
-        margin-top: 6px;
+        top: 6px;
+        right: 0;
       }
     }
   }
