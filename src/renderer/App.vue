@@ -107,7 +107,12 @@
           }
 
           // Redirect to /content
-          $vm.$router.replace('connected')
+          $vm.$router.replace({
+            name: 'connected',
+            query: {
+              db: conn.database
+            }
+          })
         })
         .catch(err => $vm.$swal('Error', err, 'error'))
       }

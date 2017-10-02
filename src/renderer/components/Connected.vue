@@ -427,6 +427,11 @@
       // Assign conn
       $vm.conn = $vm.$parent.connection.ref
 
+      // Db set in connection
+      if ($vm.$route.query.db !== null && $vm.$route.query.db !== '') {
+        $vm.use($vm.$route.query.db)
+      }
+
       // Retrieve databases
       $vm.conn.query('SHOW DATABASES')
       .then(res => {
