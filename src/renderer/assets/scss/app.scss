@@ -105,11 +105,19 @@ main {
     border-right: 1px solid #c5c5c5;
     border-radius: 0;
 
+    &.border-left {
+      border-left: 1px solid #c5c5c5;
+    }
+
     .icon {
       width: 2rem;
 
       i {
         color: #474747;
+
+        &[class*="fa-caret"] {
+          font-size: 21px;
+        }
       }
     }
   }

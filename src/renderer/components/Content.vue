@@ -122,22 +122,44 @@
       </VuePerfectScrollbar><!-- /scrollable -->
 
       <!-- Action bar -->
-      <div class="action-bar field has-addons">
-        <a class="button">
-          <span class="icon is-small">
-            <i class="fa fa-plus"></i>
-          </span>
-        </a>
-        <a class="button" :disabled="currentRow === null">
-          <span class="icon is-small">
-            <i class="fa fa-minus"></i>
-          </span>
-        </a>
-        <a class="button">
-          <span class="icon is-small">
-            <i class="fa fa-refresh"></i>
-          </span>
-        </a>
+      <div class="action-bar field has-addons space-between">
+        <!-- Left buttons -->
+        <div>
+          <a class="button">
+            <span class="icon is-small">
+              <i class="fa fa-plus"></i>
+            </span>
+          </a>
+          <a class="button">
+            <span class="icon is-small">
+              <i class="fa fa-minus"></i>
+            </span>
+          </a>
+          <a class="button">
+            <span class="icon is-small">
+              <i class="fa fa-refresh"></i>
+            </span>
+          </a>
+        </div>
+
+        <!-- Right buttons -->
+        <div>
+          <a class="button border-left" :disabled="page === 1">
+            <span class="icon is-small">
+              <i class="fa fa-caret-left"></i>
+            </span>
+          </a>
+          <a class="button">
+            <span class="icon is-small">
+              <i class="fa fa-cog"></i>
+            </span>
+          </a>
+          <a class="button no-border-right" :disabled="page === pages">
+            <span class="icon is-small">
+              <i class="fa fa-caret-right"></i>
+            </span>
+          </a>
+        </div>
       </div><!-- /action bar -->
     </div><!-- /main table -->
   </div>
@@ -172,11 +194,27 @@
         text: ''
       },
       // Pagination
-      limit: 50,
       page: 1,
+      limit: 50,
+      count: 0,
       // Context menu
       ctxData: {}
     }),
+
+    computed: {
+      /**
+       * Return total pages
+       *
+       * @return {Integer}
+       */
+      pages () {
+        if (this.count === 0) {
+          return 0
+        }
+
+        return Math.ceil(this.count / this.limit)
+      }
+    },
 
     created () {
       let $vm = this
@@ -194,7 +232,18 @@
       query += ' LIMIT ' + $vm.limit
 
       $vm.conn.query(query)
-      .then(res => $vm.rows = res)
+      .then(res => {
+        $vm.rows = res
+
+        const whatCount = $vm.$parent.primary_key !== null ? $vm.$parent.primary_key : '*'
+        const countQuery = 'SELECT COUNT(`' + whatCount + '`) AS cnt FROM `' + $vm.table + '`'
+        // Count rows
+        $vm.conn.query(countQuery)
+        .then(res => $vm.count = res[0].cnt)
+        .catch(err => {
+          $vm.$swal('Error', 'Unable to retrieve total records count with query <code>' + query + '</code>: <small>' + err.message + '</small>', 'error')
+        })
+      })
       .catch(err => {
         $vm.$swal('Error', 'Error retrieving data from query <code>' + query + '</code>: <small>' + err.message + '</small>', 'error')
       })
