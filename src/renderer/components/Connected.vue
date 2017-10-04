@@ -52,14 +52,18 @@
             <span v-if="table">-</span>
             <span v-if="table" class="weight-500 truncate">{{ table }}</span>
           </p>
-            <ul class="menu-list overflow" v-if="tables.length > 0">
-              <li v-for="t in tables" @contextmenu.prevent="$refs.ctxMenu.open($event, {table: t})" :key="t">
+          <div v-if="tables.length > 0" id="tables-container">
+            <input type="text" class="input" v-model="filterTable" placeholder="Search table" />
+
+            <ul class="menu-list overflow margin-top-5">
+              <li v-for="t in searchTable(tables)" @contextmenu.prevent="$refs.ctxMenu.open($event, {table: t})" :key="t">
                 <a @click="structure(t)" :class="{'is-active': t == table}">
                   <img src="static/table-small.png" :alt="'Table ' + t" />
                   <span>{{ t }}</span>
                 </a>
               </li>
             </ul>
+          </div>
           <small class="has-text-grey" v-else>No table found.</small>
         </div>
       </aside>
@@ -77,6 +81,7 @@
     data: () => ({
       ctxData: {},
       conn: null, // Connection instance
+      filterTable: '', // Search tables
       // Current table
       table: null,
       columns: [],
@@ -585,6 +590,16 @@
         .catch(err => {
           $vm.$swal('Error', 'Error retrieving tables: ' + err.message, 'error')
         })
+      },
+
+      /**
+       * Return filtered tables
+       *
+       * @param {Array} tables
+       * @return {Array}
+       */
+      searchTable (tables) {
+        return tables.filter(t => t.toLowerCase().indexOf(this.filterTable.toLowerCase()) > -1)
       },
 
       /**

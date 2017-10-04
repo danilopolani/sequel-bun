@@ -27,21 +27,25 @@ aside.menu {
     }  
   }
 
+  #tables-container {
+    height: calc(100% - 170px);
+
+    ul {
+      overflow-x: auto;
+      max-height: calc(100% - 30px);
+    }
+  }
+
   .menu-list {
     margin-left: -1.5rem;
     margin-right: calc(-1.5rem + 10px);
-
-    &.overflow {
-      overflow-x: auto;
-      max-height: calc(100% - 170px);
-    }
 
     li a {
       padding-left: 1.5rem;
       padding-right: 1.5rem;
       border-radius: 0;
       font-size: 0.95rem;
-      
+
       span {
         max-width: calc(100% - 25px);
         display: inline-block;
@@ -151,7 +155,8 @@ input.masked {
   background: transparent;
   border: 0;
 }
-.select select {
+.select select,
+input:not([type="radio"]):not([type="checkbox"]) {
   border-radius: 5px;
 }
 .input input:not([type="radio"]):not([type="checkbox"]) {
