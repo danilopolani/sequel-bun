@@ -189,6 +189,7 @@
       orderBy: {},
       // Search bar
       search: {
+        searched: false,
         column: null,
         operator: '=',
         text: ''
@@ -298,22 +299,11 @@
       doSearch () {
         let $vm = this
 
-        // Build query
-        let query = `SELECT * FROM \`${$vm.table}\` WHERE \`${$vm.search.column}\` `
-        if ($vm.search.operator.indexOf('NULL') > -1) {
-          query += $vm.search.operator
-        } else if ($vm.search.operator === 'BETWEEN') {
-          // To do
-        } else {
-          query += $vm.search.operator + ` '${$vm.search.text}'`
-        }
-        if ($vm.$parent.primary_key !== null) {
-          query += ` ORDER BY \`${$vm.$parent.primary_key}\` DESC`
-        }
-        query += ' LIMIT ' + $vm.limit
-
-        $vm.conn.query(query)
-        .then(rows => $vm.rows = rows)
+        $vm.conn.query($vm._buildQuery())
+        .then(rows => {
+          $vm.rows = rows
+          $vm.search.searched = true
+        })
         .catch(err => $vm.$swal('Error', 'Error executing query <code>' + query + '</code>: <small>' + err.message + '</small>', 'error'))
       },
 
@@ -338,6 +328,12 @@
           $vm.currentRow = null
         })
         .catch(err => $vm.$swal('Error', 'Error executing query <code>' + q + '</code>: <small>' + err.message + '</small>', 'error'))
+      },
+
+      /** Change page
+       */
+      changePage (page) {
+
       },
 
       /**
@@ -393,6 +389,38 @@
       columnClass (col) {
         return _.endsWith(col, '_id') || col.toLowerCase() === 'id' ? 'width-80' : ''
       },
+
+      /** 
+       * Build the query
+       *
+       * @private
+       * @return {String} 
+       */
+      _buildQuery () {
+        let $vm = this
+
+        let query = 'SELECT * FROM `' + $vm.table + '` '
+        if ($vm.search.searched) {
+          
+          query += ' WHERE `' + $vm.search.column + '` '
+          if ($vm.search.operator.indexOf('NULL') > -1) {
+            query += $vm.search.operator
+          } else if ($vm.search.operator === 'BETWEEN') {
+            // To do
+          } else {
+            query += $vm.search.operator + ` '${$vm.search.text}'`
+          }
+        }
+
+        if ($vm.$parent.primary_key !== null) {
+          query += ' ORDER BY `' + $vm.$parent.primary_key + '` DESC '
+        }
+
+        const from = ($vm.page - 1) * $vm.limit
+        query += ` LIMIT ${from}, ${$vm.limit}`
+
+        return query
+      }
 
       /**
        * Handle context menu open
