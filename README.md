@@ -27,7 +27,9 @@ yarn run lint
 
 ![Sequel Bun new connection](https://i.imgur.com/K4LdpYn.png)  
 
-![Sequel Bun table structure](https://i.imgur.com/P0sYbdA.png)  
+![Sequel Bun table structure](https://i.imgur.com/P0sYbdA.png) 
+
+![Sequel Bun table content](https://i.imgur.com/EnhJhpt.png)  
 
 
 ### Todo
