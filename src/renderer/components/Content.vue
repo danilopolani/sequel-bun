@@ -149,11 +149,36 @@
               <i class="fa fa-caret-left"></i>
             </span>
           </a>
-          <a class="button">
-            <span class="icon is-small">
-              <i class="fa fa-cog"></i>
-            </span>
-          </a>
+          <div class="dropdown is-active">
+            <div class="dropdown-trigger">
+              <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                <span class="icon is-small">
+                  <i class="fa fa-cog"></i>
+                  <i class="fa fa-angle-up" aria-hidden="true"></i>
+                </span>
+              </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+              <div class="dropdown-content">
+                <a href="#" class="dropdown-item">
+                  Dropdown item
+                </a>
+                <a class="dropdown-item">
+                  Other dropdown item
+                </a>
+                <a href="#" class="dropdown-item is-active">
+                  Active dropdown item
+                </a>
+                <a href="#" class="dropdown-item">
+                  Other dropdown item
+                </a>
+                <hr class="dropdown-divider">
+                <a href="#" class="dropdown-item">
+                  With a divider
+                </a>
+              </div>
+            </div>
+          </div>
           <a class="button no-border-right" :disabled="page === pages">
             <span class="icon is-small">
               <i class="fa fa-caret-right"></i>
@@ -298,8 +323,9 @@
        */
       doSearch () {
         let $vm = this
+        const query = $vm._buildQuery()
 
-        $vm.conn.query($vm._buildQuery())
+        $vm.conn.query(query)
         .then(rows => {
           $vm.rows = rows
           $vm.search.searched = true
@@ -390,18 +416,17 @@
         return _.endsWith(col, '_id') || col.toLowerCase() === 'id' ? 'width-80' : ''
       },
 
-      /** 
+      /**
        * Build the query
        *
        * @private
-       * @return {String} 
+       * @return {String}
        */
       _buildQuery () {
         let $vm = this
 
         let query = 'SELECT * FROM `' + $vm.table + '` '
         if ($vm.search.searched) {
-          
           query += ' WHERE `' + $vm.search.column + '` '
           if ($vm.search.operator.indexOf('NULL') > -1) {
             query += $vm.search.operator
@@ -420,7 +445,7 @@
         query += ` LIMIT ${from}, ${$vm.limit}`
 
         return query
-      }
+      },
 
       /**
        * Handle context menu open
