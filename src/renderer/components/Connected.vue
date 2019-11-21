@@ -19,7 +19,7 @@
     </context-menu>
 
     <div class="columns is-fullheight">
-      <aside class="column is-one-quarter menu padding-left">
+      <aside class="column is-2 menu padding-left">
 
         <!-- Show databases if not selected -->
         <div v-if="$parent.db === null" class="is-fullheight">

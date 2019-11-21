@@ -121,78 +121,82 @@
 </script>
 
 <style lang="scss">
-  html {
-    overflow: hidden !important;
-  }
+html {
+  overflow: hidden !important;
+}
 
-  html,
-  body,
-  #app {
-    height: 100%;
-  }
+html,
+body,
+#app {
+  height: 100%;
+}
 
-  .is-overlay {
-    z-index: 1;
+.is-overlay {
+  z-index: 1;
 
-    &.global {
-      background: rgba(0, 0, 0, .5);
-      z-index: 2;
+  &.global {
+    background: rgba(0, 0, 0, .5);
+    z-index: 2;
 
-      .hero {
-        background: none;
-      }
+    .hero {
+      background: none;
+    }
 
-      h3 {
-        color: #fff;
-        margin-top: 20px;
-      }
+    h3 {
+      color: #fff;
+      margin-top: 20px;
     }
   }
+}
 
-  nav > .container {
-    max-width: 100%;
-  }
+nav > .container {
+  max-width: 100%;
+}
 
-  #top-bar > .column {
+#top-bar > .column {
+  background: #d4d4d4;
+  padding-bottom: 0;
+
+  .nav {
     background: #d4d4d4;
-    padding-bottom: 0;
+  }
 
-    .nav {
-      background: #d4d4d4;
-    }
+  .select {
+    margin-top: 7px;
+  }
 
-    .select {
-      margin-top: 7px;
-    }
+  .tabs a {
+    display: block;
+    padding: 0em 1em 0.3em 1em;
+    font-size: 0.9rem;
+    border-radius: 5px 5px 0 0;
+    border: none;
 
-    .tabs a {
+    img {
       display: block;
-      padding: 0em 1em 0.3em 1em;
-      font-size: 0.9rem;
-      border-radius: 5px 5px 0 0;
-      border: none;
-
-      img {
-        display: block;
-        margin: auto;
-        max-width: none;
-        max-height: none;
-      }
-    }
-
-    .tabs li.is-active a,
-    .tabs a.is-active {
-      background: #c3c3c3;
-      border-radius: 5px 5px 0 0;
-      color: #434343;
-      z-index: 1;
-    }
-
-    .tabs li.disabled a,
-    .tabs a[disabled] {
-      opacity: 0.7;
-      background: transparent !important;
-      cursor: not-allowed;
+      margin: auto;
+      max-width: none;
+      max-height: none;
     }
   }
+
+  .tabs li.is-active a,
+  .tabs a.is-active {
+    background: #c3c3c3;
+    border-radius: 5px 5px 0 0;
+    color: #434343;
+    z-index: 1;
+  }
+
+  .tabs li.disabled a,
+  .tabs a[disabled] {
+    opacity: 0.7;
+    background: transparent !important;
+    cursor: not-allowed;
+  }
+}
+
+.button.is-rounded {
+  border-radius: 15px !important;
+}
 </style>

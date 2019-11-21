@@ -95,7 +95,26 @@
               <div class="is-clearfix"></div>
             </div><!-- ./field -->
 
-            <!-- Hostname -->
+            <!-- Port -->
+            <div class="field is-horizontal">
+              <div class="columns is-fullwidth">
+                <div class="column is-4">
+                  <div class="field-label is-normal">
+                    <label class="label">Port</label>
+                  </div>
+                </div>
+                <div class="field-body column">
+                  <div class="field">
+                    <div class="control">
+                      <input class="input" type="text" placeholder="3306" v-model="connection.port" required>
+                    </div>
+                  </div>
+                </div>
+              </div><!-- /.columns -->
+              <div class="is-clearfix"></div>
+            </div><!-- ./field -->
+
+            <!-- Username -->
             <div class="field is-horizontal">
               <div class="columns is-fullwidth">
                 <div class="column is-4">
@@ -191,10 +210,10 @@
         name: null,
         color: null,
         host: '127.0.0.1',
+        port: 3306,
         user: null,
         password: null,
-        database: null,
-        port: 3306
+        database: null
       },
       ctxData: {}
     }),

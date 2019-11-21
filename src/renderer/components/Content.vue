@@ -3,7 +3,7 @@
     <!-- Search -->
     <div id="content-search-bar">
       <div class="columns">
-        <div class="column is-1 has-text-right">
+        <div class="column has-text-right">
           Search:
         </div>
         <div class="column is-2"><!-- Field -->
@@ -38,8 +38,16 @@
             :disabled="search.operator.indexOf('NULL') > -1"
             @keyup.enter="search.text.trim().length === 0 ? '' : doSearch()">
         </div>
+        <div class="column" v-if="search.searched">
+          <button class="button is-danger is-rounded has-text-centered"
+            @click="resetSearch()">
+            <span class="icon">
+              <i class="fa fa-times"></i>
+            </span>
+          </button>
+        </div>
         <div class="column is-1">
-          <button class="button is-info action osx active is-fullwidth"
+          <button class="button is-info is-rounded is-fullwidth"
             :disabled="querying || (search.text.trim().length === 0 && search.operator.indexOf('NULL') === -1)"
             @click="doSearch()">
             Filter
@@ -204,9 +212,9 @@
 
     computed: {
       /**
-       * Return total pages
+       * Return total pages count.
        *
-       * @return {Integer}
+       * @return {number}
        */
       pages () {
         if (this.count === 0) {
@@ -306,6 +314,14 @@
           $vm.search.searched = true
         })
         .catch(err => $vm.$swal('Error', 'Error executing query <code>' + query + '</code>: <small>' + err.message + '</small>', 'error'))
+      },
+
+      /**
+       * Reset search filters.
+       */
+      resetSearch () {
+        this.search.text = ''
+        this.search.searched = false
       },
 
       /**
