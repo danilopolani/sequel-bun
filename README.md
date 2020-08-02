@@ -1,10 +1,7 @@
 # Sequel Bun
 
-## /!\ WORK IN PROGRESS /!\
-<!--<p align="center"><img src="http://i.imgur.com/SLUqV4s.png" alt="Log analyser logo" /></p>-->
-
-Sequel Bun is a MySQL GUI client for Ubuntu, inspired by Sequel Pro.  
-Written in **Electron**, **NodeJS** and **VueJS**, for all links and documentation see the end of readme.
+## ⚠️ ARCHIVED ⚠️
+This project has been abandoned and archived. Please follow the development of some cool alternatives like [Beekeper Studio](https://github.com/beekeeper-studio/beekeeper-studio).
 
 ### Build Setup
 
